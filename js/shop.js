@@ -746,7 +746,7 @@ function renderCartPage() {
             <div class="shop-empty-state">
                 <h1>Il carrello e vuoto</h1>
                 <p>Aggiungi almeno un programma per proseguire al checkout.</p>
-                <a class="btn btn-primary" href="programmi.html">Vai al listing programmi</a>
+                <a class="btn btn-primary cart-empty-cta" href="programmi.html">Vai al listing programmi</a>
             </div>
         `;
         return;

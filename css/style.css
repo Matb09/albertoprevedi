@@ -2540,6 +2540,15 @@ ul {
     color: var(--dark-400);
 }
 
+.shop-empty-state .cart-empty-cta {
+    margin-top: 0.65rem;
+    color: #ffffff;
+}
+
+.shop-empty-state .cart-empty-cta:hover {
+    color: #ffffff;
+}
+
 .shop-inline-actions {
     margin-top: 1rem;
     display: flex;
