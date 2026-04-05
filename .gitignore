@@ -1,0 +1,31 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Dependencies / build caches
+node_modules/
+dist/
+build/
+.cache/
+
+# Hosting / tooling
+.vercel/
+
+# Local generated artifacts
+repomix-output.txt
+drive-download-20260223T220617Z-1-001.zip

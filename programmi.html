@@ -1,0 +1,93 @@
+?<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programmi | Alberto Prevedi</title>
+    <meta name="description" content="Listing dei programmi di allenamento Alberto Prevedi con acquisto multiplo e sconti pack.">
+    <link rel="stylesheet" href="css/style.css?v=20260401-7">
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <a href="index.html" class="navbar-brand">Alberto<span>Prevedi</span></a>
+            <div class="nav-links" id="nav-links">
+                <a href="index.html#chi-sono">Chi Sono</a>
+                <a href="index.html#metodo">Metodo</a>
+                <a href="index.html#acquista">Programmi</a>
+                <a href="index.html#contatti">Contatti</a>
+                <a href="carrello.html" class="nav-cart-link" aria-label="Apri carrello">
+                    <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="9" cy="20" r="1"></circle>
+                        <circle cx="17" cy="20" r="1"></circle>
+                        <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H7"></path>
+                    </svg>
+                    <span class="cart-badge" data-cart-count>0</span>
+                </a>
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <section class="section shop-page">
+        <div class="bg-mesh"></div>
+        <div class="container">
+            <div class="shop-heading reveal">
+                <p class="section-label">Catalogo Programmi</p>
+                <h1 class="section-title">Scegli il tuo <span>programma</span></h1>
+                <p class="shop-intro-copy">
+                    Acquista uno o piu programmi e ottieni automaticamente i pack scontati in carrello.
+                    <span class="shop-inline-tooltip">
+                        <button type="button" class="shop-tooltip-trigger" aria-label="Mostra come funzionano gli sconti">
+                            !
+                        </button>
+                        <span class="shop-tooltip-box" role="tooltip">
+                            Ogni programma costa 69,90 EUR; quando ne aggiungi 3 il totale passa automaticamente a 149 EUR, mentre con 5 programmi paghi 229 EUR.
+                        </span>
+                    </span>
+                </p>
+                <details class="shop-filter-dropdown" id="shop-filter-controls">
+                    <summary class="shop-filter-summary">
+                        <span>Filtri</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </summary>
+                    <div class="shop-filter-menu" aria-label="Filtri programmi">
+                        <div class="shop-filter-section">
+                            <p class="shop-filter-section-title">Categoria</p>
+                            <label class="shop-filter-check">
+                                <input type="checkbox" data-listing-filter-checkbox="ppl">
+                                <span>PPL</span>
+                            </label>
+                            <label class="shop-filter-check">
+                                <input type="checkbox" data-listing-filter-checkbox="split">
+                                <span>Split</span>
+                            </label>
+                        </div>
+                    </div>
+                </details>
+            </div>
+
+            <div class="shop-grid" id="shop-listing-grid"></div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">Alberto<span>Prevedi</span></div>
+                <p class="footer-copy">&copy; 2026 Alberto Prevedi. Tutti i diritti riservati.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/shop-data.js?v=20260405-1"></script>
+    <script src="js/shop.js?v=20260405-2"></script>
+    <script src="js/main.js?v=20260401-4"></script>
+</body>
+</html>
