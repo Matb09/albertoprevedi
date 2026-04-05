@@ -1,0 +1,11 @@
+# Large local archive not needed for deployment
+drive-download-20260223T220617Z-1-001.zip
+
+# Local/generated files
+repomix-output.txt
+
+# Docs/scripts not required at runtime
+apps-script-contact-form.js
+apps-script-stripe-checkout.js
+apps-script-stripe-webhook.js
+build-gallery.js

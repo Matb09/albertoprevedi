@@ -29,3 +29,5 @@ build/
 # Local generated artifacts
 repomix-output.txt
 drive-download-20260223T220617Z-1-001.zip
+
+.vercel
