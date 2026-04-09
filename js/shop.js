@@ -590,7 +590,6 @@ function renderProgramPage() {
 
                 <div class="pdp-actions">
                     <button class="btn btn-primary" data-add-to-cart="${program.id}" data-add-default-label="Aggiungi al carrello" type="button" ${inCart ? 'disabled' : ''}>${inCart ? 'Nel carrello' : 'Aggiungi al carrello'}</button>
-                    <a class="btn btn-outline" href="${program.pdf}" target="_blank" rel="noopener">Apri PDF</a>
                 </div>
 
                 <p class="pdp-meta-note">Sconti automatici in carrello: 3 programmi a ${formatEuro(14900)} e 5 programmi a ${formatEuro(22900)}.</p>

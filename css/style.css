@@ -1752,6 +1752,10 @@ ul {
     transition: transform 0.3s ease;
 }
 
+.program-toggle-btn .toggle-icon {
+    font-size: 1rem;
+}
+
 .program-toggle-btn.open .toggle-icon {
     transform: rotate(180deg);
 }
