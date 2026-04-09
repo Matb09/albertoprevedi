@@ -800,15 +800,16 @@ function renderCartPage() {
 
     checkoutBtn.addEventListener('click', async () => {
         checkoutBtn.disabled = true;
-        feedback.textContent = 'Creazione checkout in corso...';
+        feedback.textContent = '';
+        feedback.classList.remove('is-visible');
 
         try {
             const payload = buildCheckoutPayload(getCart());
             const url = await createCheckoutSession(payload);
-            feedback.textContent = 'Redirect a Stripe...';
             window.location.href = url;
         } catch (error) {
             feedback.textContent = error.message || 'Errore durante il checkout';
+            feedback.classList.add('is-visible');
             checkoutBtn.disabled = false;
         }
     });

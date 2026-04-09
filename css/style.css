@@ -2520,10 +2520,14 @@ ul {
 }
 
 .checkout-feedback {
-    min-height: 1.2rem;
+    display: none;
     margin-top: 0.5rem;
     font-size: 0.84rem;
     color: var(--primary-700);
+}
+
+.checkout-feedback.is-visible {
+    display: block;
 }
 
 .shop-empty-state {
