@@ -38,17 +38,6 @@ const PROGRAM_CATALOG = [
         pdf: 'assets/programs/programma-4-split-enfasi-upper-body.pdf'
     },
     {
-        id: 'split-4-upper-focus',
-        slug: 'split-4-upper-focus',
-        title: '4 Split Focus Upper Body',
-        group: 'split',
-        category: '4 Split',
-        shortDescription: 'Variante 4 split orientata al miglioramento della parte alta.',
-        longDescription: 'Versione alternativa 4 split, adatta a chi cerca maggiore stimolo su petto, dorso, spalle e braccia.',
-        cover: 'assets/covers/4-split-focus-upper-body.png',
-        pdf: 'assets/programs/programma-4-split-enfasi-upper-body.pdf'
-    },
-    {
         id: 'split-5-296',
         slug: 'split-5-296',
         title: '5 Split Program 296',
