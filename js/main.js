@@ -4,12 +4,32 @@
 
 document.addEventListener('DOMContentLoaded', () => {
     initNavbar();
+    initMobileCartFab();
     initCartBadge();
     initScrollReveal();
     initGallery();
     initContactForm();
     initProgramFilters();
 });
+
+function initMobileCartFab() {
+    if (document.querySelector('[data-mobile-cart-fab]')) return;
+
+    const fab = document.createElement('a');
+    fab.href = 'carrello.html';
+    fab.className = 'mobile-cart-fab';
+    fab.setAttribute('aria-label', 'Apri carrello');
+    fab.setAttribute('data-mobile-cart-fab', '');
+    fab.innerHTML = `
+        <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="9" cy="20" r="1"></circle>
+            <circle cx="17" cy="20" r="1"></circle>
+            <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L22 7H7"></path>
+        </svg>
+        <span class="cart-badge" data-cart-count>0</span>
+    `;
+    document.body.appendChild(fab);
+}
 
 function initCartBadge() {
     let raw = null;
@@ -33,6 +53,12 @@ function initCartBadge() {
         badge.textContent = String(total);
         badge.style.display = total > 0 ? 'inline-flex' : 'none';
     });
+
+    const mobileFab = document.querySelector('[data-mobile-cart-fab]');
+    if (mobileFab) {
+        const onCartPage = /\/?carrello\.html$/i.test(window.location.pathname);
+        mobileFab.classList.toggle('is-visible', total > 0 && !onCartPage);
+    }
 }
 
 /* ── Navbar ── */
