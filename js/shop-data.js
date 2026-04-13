@@ -5,13 +5,17 @@
         { quantity: 3, priceCents: 14900, label: 'Pack 3 programmi' },
         { quantity: 5, priceCents: 22900, label: 'Pack 5 programmi' }
     ],
+    coachingPlans: [
+        { id: 'coaching-6m', months: 6, label: 'Coaching Online - 6 mesi', priceCents: 105000 },
+        { id: 'coaching-12m', months: 12, label: 'Coaching Online - 12 mesi', priceCents: 180000 }
+    ],
     // Opzionale ma consigliato: URL base pubblico del sito (deve essere HTTPS).
     // Se lasciato vuoto, il checkout usa automaticamente l'origin della pagina corrente.
     // Esempio: 'https://www.albertoprevedi.it/'
-    siteBaseUrl: '',
+    siteBaseUrl: 'https://albertoprevedi.vercel.app/',
     // Deploy URL dello script che crea la sessione Stripe Checkout.
     // Sostituisci questo valore quando pubblichi l'endpoint.
-    checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbwcCsuxT6OJ2XP71BjenrPr9Cukvyb4xgYCcMCWhjsWoVc0dfKmcCFJTCvi-Cx-DNnp/exec'
+    checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbxQdi6CHVc7S0mfINi4-vyvZQ1DrBT7eZLpRnclGQx3s3gzlwXuXQJMUMpD5PGgDFe7/exec'
 };
 
 const PROGRAM_CATALOG = [

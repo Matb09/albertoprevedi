@@ -2677,3 +2677,107 @@ ul {
         transform: translateY(0);
     }
 }
+
+/* ===================================================
+   CHECKOUT DETAILS PAGE
+   =================================================== */
+.checkout-layout {
+    display: grid;
+    grid-template-columns: minmax(270px, 0.95fr) 1.45fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.checkout-summary-panel,
+.checkout-form-panel {
+    background: linear-gradient(135deg, #f8fafc, #f0f9ff);
+    border: 1px solid var(--primary-200);
+    border-radius: var(--radius-xl);
+    padding: clamp(1rem, 2.2vw, 1.4rem);
+}
+
+.checkout-summary-panel h2,
+.checkout-form-panel h1 {
+    font-family: var(--font-heading);
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.checkout-summary-panel h2 {
+    margin-top: 0.35rem;
+}
+
+.checkout-summary-list {
+    margin-top: 0.9rem;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.checkout-summary-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.8rem;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.15);
+    padding-bottom: 0.5rem;
+    color: #334155;
+    font-size: 0.92rem;
+}
+
+.checkout-summary-item strong {
+    color: #0f172a;
+}
+
+.checkout-summary-totals {
+    margin-top: 0.75rem;
+}
+
+.checkout-summary-total {
+    font-size: 1rem;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.checkout-form {
+    margin-top: 0.95rem;
+    display: grid;
+    gap: 0.8rem;
+}
+
+.checkout-form .form-group {
+    margin-bottom: 0;
+}
+
+.checkout-form-row-3 {
+    grid-template-columns: 1.4fr 0.7fr 0.7fr;
+}
+
+.checkout-privacy-check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.55rem;
+    align-items: start;
+    color: #334155;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.checkout-privacy-check input[type="checkbox"] {
+    margin-top: 0.15rem;
+}
+
+.checkout-form .btn {
+    justify-content: center;
+    width: 100%;
+}
+
+@media (max-width: 1024px) {
+    .checkout-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .checkout-form-row-3 {
+        grid-template-columns: 1fr;
+    }
+}

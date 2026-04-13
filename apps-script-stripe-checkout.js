@@ -1,4 +1,4 @@
-﻿// ============================================================
+// ============================================================
 // Google Apps Script - Stripe Checkout Session API
 // ============================================================
 // Deploy come Web App (Execute as: Me, Who has access: Anyone)
@@ -6,10 +6,12 @@
 //   STRIPE_SECRET_KEY = sk_live_... oppure sk_test_...
 //
 // Endpoint usato dal frontend (js/shop-data.js -> checkoutApiUrl)
-// POST body JSON (text/plain):
+// POST body JSON (text/plain)
 // {
-//   items: [{ id, title, quantity, unitPriceCents }],
-//   pricing: { subtotalCents, discountCents, totalCents, totalQuantity, bundleBreakdown },
+//   orderType: 'program' | 'coaching',
+//   customer: { nome, cognome, indirizzo, citta, provincia, cap, email, cell, cfPiva },
+//   items/pricing (solo program),
+//   coaching (solo coaching),
 //   successUrl,
 //   cancelUrl
 // }
@@ -30,13 +32,11 @@ function doPost(e) {
       return jsonResponse({ error: 'Missing STRIPE_SECRET_KEY in Script Properties' }, 500);
     }
 
-    const items = normalizeItems(payload.items || []);
-    if (!items.length) {
-      return jsonResponse({ error: 'Cart is empty' }, 400);
+    const customer = normalizeCustomer(payload.customer || {});
+    const customerError = validateCustomer(customer);
+    if (customerError) {
+      return jsonResponse({ error: customerError }, 400);
     }
-
-    const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
-    const pricing = calculateBestPrice(totalQuantity);
 
     const successUrl = safeUrl(payload.successUrl);
     const cancelUrl = safeUrl(payload.cancelUrl);
@@ -45,26 +45,53 @@ function doPost(e) {
       return jsonResponse({ error: 'Missing successUrl/cancelUrl' }, 400);
     }
 
-    const programTitles = items.map((item) => item.title).join(' | ').slice(0, 500);
-    const programIds = items.map((item) => item.id).join(',').slice(0, 500);
+    const orderType = String(payload.orderType || 'program').toLowerCase() === 'coaching' ? 'coaching' : 'program';
+    const orderData = orderType === 'coaching'
+      ? buildCoachingOrderData(payload.coaching || {})
+      : buildProgramOrderData(payload.items || []);
+
+    if (orderData.error) {
+      return jsonResponse({ error: orderData.error }, 400);
+    }
 
     const params = {
       mode: 'payment',
+      locale: 'it',
       success_url: successUrl,
       cancel_url: cancelUrl,
+      customer_email: customer.email,
+      billing_address_collection: 'required',
       'line_items[0][price_data][currency]': 'eur',
-      'line_items[0][price_data][unit_amount]': String(pricing.totalCents),
-      'line_items[0][price_data][product_data][name]': `Programmi Allenamento (${totalQuantity})`,
-      'line_items[0][price_data][product_data][description]': `Acquisto multiplo programmi - ${programTitles}`,
-      'line_items[0][quantity]': '1',
-      'metadata[program_ids]': programIds,
-      'metadata[program_titles]': programTitles,
-      'metadata[program_count]': String(totalQuantity),
-      'metadata[subtotal_cents]': String(pricing.subtotalCents),
-      'metadata[discount_cents]': String(pricing.discountCents),
-      'metadata[total_cents]': String(pricing.totalCents),
-      'metadata[bundles]': pricing.bundleLabel
+      'line_items[0][price_data][unit_amount]': String(orderData.totalCents),
+      'line_items[0][price_data][product_data][name]': orderData.productName,
+      'line_items[0][price_data][product_data][description]': orderData.productDescription,
+      'line_items[0][quantity]': '1'
     };
+
+    const metadata = {
+      order_type: orderType,
+      order_label: orderData.orderLabel,
+      total_cents: String(orderData.totalCents),
+      customer_nome: customer.nome,
+      customer_cognome: customer.cognome,
+      customer_indirizzo: customer.indirizzo,
+      customer_citta: customer.citta,
+      customer_provincia: customer.provincia,
+      customer_cap: customer.cap,
+      customer_email: customer.email,
+      customer_cell: customer.cell,
+      customer_cf_piva: customer.cfPiva
+    };
+
+    Object.keys(orderData.metadata).forEach((key) => {
+      metadata[key] = orderData.metadata[key];
+    });
+
+    Object.keys(metadata).forEach((key) => {
+      const safeKey = String(key || '').trim().slice(0, 40);
+      if (!safeKey) return;
+      params[`metadata[${safeKey}]`] = String(metadata[key] || '').slice(0, 500);
+    });
 
     const stripeResponse = UrlFetchApp.fetch('https://api.stripe.com/v1/checkout/sessions', {
       method: 'post',
@@ -86,12 +113,58 @@ function doPost(e) {
     return jsonResponse({
       ok: true,
       url: parsed.url,
-      totalCents: pricing.totalCents,
-      discountCents: pricing.discountCents
+      orderType: orderType,
+      totalCents: orderData.totalCents
     }, 200);
   } catch (error) {
     return jsonResponse({ error: error.message || 'Internal error' }, 500);
   }
+}
+
+function buildProgramOrderData(rawItems) {
+  const items = normalizeItems(rawItems);
+  if (!items.length) {
+    return { error: 'Cart is empty' };
+  }
+
+  const totalQuantity = items.reduce((sum, item) => sum + item.quantity, 0);
+  const pricing = calculateBestPrice(totalQuantity);
+
+  const programTitles = items.map((item) => item.title).join(' | ').slice(0, 500);
+  const programIds = items.map((item) => item.id).join(',').slice(0, 500);
+
+  return {
+    totalCents: pricing.totalCents,
+    orderLabel: `Programmi (${totalQuantity})`,
+    productName: `Programmi Allenamento (${totalQuantity})`,
+    productDescription: `Acquisto multiplo programmi - ${programTitles}`.slice(0, 500),
+    metadata: {
+      program_ids: programIds,
+      program_titles: programTitles,
+      program_count: String(totalQuantity),
+      subtotal_cents: String(pricing.subtotalCents),
+      discount_cents: String(pricing.discountCents),
+      bundles: pricing.bundleLabel
+    }
+  };
+}
+
+function buildCoachingOrderData(rawCoaching) {
+  const coaching = normalizeCoaching(rawCoaching);
+  if (!coaching) {
+    return { error: 'Invalid coaching payload' };
+  }
+
+  return {
+    totalCents: coaching.priceCents,
+    orderLabel: coaching.label,
+    productName: coaching.label,
+    productDescription: `Percorso coaching online ${coaching.months} mesi`,
+    metadata: {
+      coaching_id: coaching.id,
+      coaching_months: String(coaching.months)
+    }
+  };
 }
 
 function normalizeItems(rawItems) {
@@ -104,6 +177,60 @@ function normalizeItems(rawItems) {
       title: String(item.title).slice(0, 120),
       quantity: Math.max(1, parseInt(item.quantity, 10) || 1)
     }));
+}
+
+function normalizeCoaching(rawCoaching) {
+  if (!rawCoaching || typeof rawCoaching !== 'object') return null;
+
+  const id = String(rawCoaching.id || '').slice(0, 80);
+  const label = String(rawCoaching.label || '').slice(0, 180);
+  const months = parseInt(rawCoaching.months, 10);
+  const priceCents = parseInt(rawCoaching.priceCents, 10);
+
+  if (!id || !label) return null;
+  if (!Number.isFinite(months) || months <= 0) return null;
+  if (!Number.isFinite(priceCents) || priceCents <= 0) return null;
+
+  return {
+    id,
+    label,
+    months,
+    priceCents
+  };
+}
+
+function normalizeCustomer(rawCustomer) {
+  const customer = rawCustomer && typeof rawCustomer === 'object' ? rawCustomer : {};
+
+  return {
+    nome: String(customer.nome || '').trim().slice(0, 120),
+    cognome: String(customer.cognome || '').trim().slice(0, 120),
+    indirizzo: String(customer.indirizzo || '').trim().slice(0, 220),
+    citta: String(customer.citta || '').trim().slice(0, 120),
+    provincia: String(customer.provincia || '').trim().toUpperCase().slice(0, 2),
+    cap: String(customer.cap || '').trim().slice(0, 10),
+    email: String(customer.email || '').trim().toLowerCase().slice(0, 180),
+    cell: String(customer.cell || '').trim().slice(0, 50),
+    cfPiva: String(customer.cfPiva || '').trim().toUpperCase().slice(0, 32)
+  };
+}
+
+function validateCustomer(customer) {
+  if (!customer.nome) return 'Missing customer nome';
+  if (!customer.cognome) return 'Missing customer cognome';
+  if (!customer.indirizzo) return 'Missing customer indirizzo';
+  if (!customer.citta) return 'Missing customer citta';
+  if (!customer.provincia) return 'Missing customer provincia';
+  if (!customer.cap) return 'Missing customer cap';
+  if (!customer.email) return 'Missing customer email';
+  if (!customer.cell) return 'Missing customer cell';
+  if (!customer.cfPiva) return 'Missing customer cfPiva';
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) {
+    return 'Invalid customer email';
+  }
+
+  return '';
 }
 
 function calculateBestPrice(totalQty) {

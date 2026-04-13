@@ -644,15 +644,25 @@ function getCheckoutBaseUrl() {
     return new URL('.', current).toString();
 }
 
-function getCheckoutUrls() {
+function getCheckoutUrls(orderType) {
     const baseUrl = getCheckoutBaseUrl();
+    const successUrl = new URL('checkout-success.html', baseUrl);
+    const cancelUrl = new URL('checkout-cancel.html', baseUrl);
+    successUrl.searchParams.set('order_type', orderType || 'program');
+    cancelUrl.searchParams.set('order_type', orderType || 'program');
     return {
-        successUrl: new URL('checkout-success.html', baseUrl).toString(),
-        cancelUrl: new URL('checkout-cancel.html', baseUrl).toString()
+        successUrl: successUrl.toString(),
+        cancelUrl: cancelUrl.toString()
     };
 }
 
-function buildCheckoutPayload(cart) {
+function getCoachingPlanByMonths(months) {
+    const normalizedMonths = parseInt(months, 10);
+    if (!Array.isArray(SHOP_CONFIG.coachingPlans)) return null;
+    return SHOP_CONFIG.coachingPlans.find((plan) => plan.months === normalizedMonths) || null;
+}
+
+function buildProgramCheckoutPayload(cart, customer) {
     const totals = calculateCartTotals(cart);
     const items = cart
         .map((item) => {
@@ -667,10 +677,12 @@ function buildCheckoutPayload(cart) {
         })
         .filter(Boolean);
 
-    const urls = getCheckoutUrls();
+    const urls = getCheckoutUrls('program');
 
     return {
+        orderType: 'program',
         currency: SHOP_CONFIG.currency,
+        customer,
         items,
         pricing: {
             subtotalCents: totals.subtotalCents,
@@ -687,6 +699,85 @@ function buildCheckoutPayload(cart) {
         successUrl: urls.successUrl,
         cancelUrl: urls.cancelUrl
     };
+}
+
+function buildCoachingCheckoutPayload(plan, customer) {
+    const urls = getCheckoutUrls('coaching');
+    return {
+        orderType: 'coaching',
+        currency: SHOP_CONFIG.currency,
+        customer,
+        coaching: {
+            id: plan.id,
+            months: plan.months,
+            label: plan.label,
+            priceCents: plan.priceCents
+        },
+        successUrl: urls.successUrl,
+        cancelUrl: urls.cancelUrl
+    };
+}
+
+function collectCheckoutCustomer(form) {
+    const getValue = (name) => String((form.elements[name] && form.elements[name].value) || '').trim();
+    return {
+        nome: getValue('nome'),
+        cognome: getValue('cognome'),
+        indirizzo: getValue('indirizzo'),
+        citta: getValue('citta'),
+        provincia: getValue('provincia').toUpperCase(),
+        cap: getValue('cap'),
+        email: getValue('email').toLowerCase(),
+        cell: getValue('cell'),
+        cfPiva: getValue('cf_piva')
+    };
+}
+
+function validateCheckoutCustomer(customer, privacyChecked) {
+    const requiredFields = [
+        ['nome', 'Inserisci il nome.'],
+        ['cognome', 'Inserisci il cognome.'],
+        ['indirizzo', 'Inserisci l\'indirizzo di residenza.'],
+        ['citta', 'Inserisci la citta.'],
+        ['provincia', 'Inserisci la provincia.'],
+        ['cap', 'Inserisci il CAP.'],
+        ['email', 'Inserisci l\'email.'],
+        ['cell', 'Inserisci il cellulare.'],
+        ['cfPiva', 'Inserisci CF o Partita IVA.']
+    ];
+
+    for (const [field, message] of requiredFields) {
+        if (!customer[field]) {
+            return message;
+        }
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) {
+        return 'Email non valida.';
+    }
+
+    if (!/^[0-9]{5}$/.test(customer.cap)) {
+        return 'CAP non valido (usa 5 cifre).';
+    }
+
+    if (!/^[A-Za-z]{2}$/.test(customer.provincia)) {
+        return 'Provincia non valida (usa 2 lettere).';
+    }
+
+    const digitsPhone = customer.cell.replace(/\D/g, '');
+    if (digitsPhone.length < 8) {
+        return 'Numero di cellulare non valido.';
+    }
+
+    if (customer.cfPiva.replace(/\s+/g, '').length < 11) {
+        return 'CF o Partita IVA non valido.';
+    }
+
+    if (!privacyChecked) {
+        return 'Devi accettare l\'informativa privacy per proseguire.';
+    }
+
+    return '';
 }
 
 async function createCheckoutSession(payload) {
@@ -726,6 +817,10 @@ async function createCheckoutSession(payload) {
     }
 
     const data = await response.json();
+    if (data && data.error) {
+        throw new Error(String(data.error).slice(0, 220));
+    }
+
     if (!data || !data.url) {
         throw new Error('Risposta checkout non valida');
     }
@@ -783,7 +878,7 @@ function renderCartPage() {
                 <div class="cart-summary-row"><span>Subtotale</span><strong>${formatEuro(totals.subtotalCents)}</strong></div>
                 <div class="cart-summary-row"><span>Sconto pack</span><strong>- ${formatEuro(totals.discountCents)}</strong></div>
                 <div class="cart-summary-row cart-total"><span>Totale</span><strong>${formatEuro(totals.totalCents)}</strong></div>
-                <button type="button" id="cart-checkout-btn" class="btn btn-primary">Procedi al checkout</button>
+                <button type="button" id="cart-checkout-btn" class="btn btn-primary">Inserisci dati e procedi</button>
                 <a class="btn btn-outline" href="programmi.html">Continua acquisti</a>
                 <p id="checkout-feedback" class="checkout-feedback" aria-live="polite"></p>
             </aside>
@@ -801,19 +896,190 @@ function renderCartPage() {
     const checkoutBtn = document.getElementById('cart-checkout-btn');
     const feedback = document.getElementById('checkout-feedback');
 
-    checkoutBtn.addEventListener('click', async () => {
+    checkoutBtn.addEventListener('click', () => {
         checkoutBtn.disabled = true;
         feedback.textContent = '';
         feedback.classList.remove('is-visible');
+        window.location.href = 'checkout.html?flow=programs';
+    });
+}
+
+function buildCheckoutProgramsSummary(items, totals) {
+    return `
+        <h2>Riepilogo ordine</h2>
+        <div class="checkout-summary-list">
+            ${items.map((item) => `
+                <div class="checkout-summary-item">
+                    <span>${item.product.title}</span>
+                    <strong>${formatEuro(SHOP_CONFIG.singlePriceCents)}</strong>
+                </div>
+            `).join('')}
+        </div>
+        <div class="checkout-summary-totals">
+            <div class="checkout-summary-item"><span>Subtotale</span><strong>${formatEuro(totals.subtotalCents)}</strong></div>
+            <div class="checkout-summary-item"><span>Sconto pack</span><strong>- ${formatEuro(totals.discountCents)}</strong></div>
+            <div class="checkout-summary-item checkout-summary-total"><span>Totale</span><strong>${formatEuro(totals.totalCents)}</strong></div>
+        </div>
+    `;
+}
+
+function buildCheckoutCoachingSummary(plan) {
+    return `
+        <h2>Riepilogo ordine</h2>
+        <div class="checkout-summary-list">
+            <div class="checkout-summary-item">
+                <span>${plan.label}</span>
+                <strong>${formatEuro(plan.priceCents)}</strong>
+            </div>
+        </div>
+        <div class="checkout-summary-totals">
+            <div class="checkout-summary-item checkout-summary-total"><span>Totale</span><strong>${formatEuro(plan.priceCents)}</strong></div>
+        </div>
+    `;
+}
+
+function renderCheckoutPage() {
+    const wrapper = document.getElementById('checkout-page');
+    if (!wrapper) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const flow = (params.get('flow') || 'programs').toLowerCase();
+    const isCoaching = flow === 'coaching';
+
+    const cart = getCart();
+    const programItems = cart
+        .map((item) => ({ ...item, product: PROGRAM_BY_ID[item.id] }))
+        .filter((item) => item.product);
+    const programTotals = calculateCartTotals(cart);
+
+    const coachingPlan = isCoaching ? getCoachingPlanByMonths(params.get('months')) : null;
+
+    if (!isCoaching && !programItems.length) {
+        wrapper.innerHTML = `
+            <div class="shop-empty-state">
+                <h1>Carrello vuoto</h1>
+                <p>Aggiungi almeno un programma prima del checkout.</p>
+                <a class="btn btn-primary" href="programmi.html">Vai ai programmi</a>
+            </div>
+        `;
+        return;
+    }
+
+    if (isCoaching && !coachingPlan) {
+        wrapper.innerHTML = `
+            <div class="shop-empty-state">
+                <h1>Piano coaching non valido</h1>
+                <p>Seleziona nuovamente il percorso coaching dalla home.</p>
+                <a class="btn btn-primary" href="index.html#acquista">Torna ad acquista</a>
+            </div>
+        `;
+        return;
+    }
+
+    const summary = isCoaching
+        ? buildCheckoutCoachingSummary(coachingPlan)
+        : buildCheckoutProgramsSummary(programItems, programTotals);
+
+    wrapper.innerHTML = `
+        <div class="checkout-layout">
+            <aside class="checkout-summary-panel">
+                <p class="shop-card-category">${isCoaching ? 'Coaching Online' : 'Programmi Allenamento'}</p>
+                ${summary}
+            </aside>
+
+            <section class="checkout-form-panel">
+                <h1>Dati per fatturazione</h1>
+                <p class="cart-subtitle">Compila i dati richiesti prima del pagamento. Riceverai conferma via email.</p>
+                <form id="checkout-customer-form" class="checkout-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkout-nome">Nome</label>
+                            <input id="checkout-nome" name="nome" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout-cognome">Cognome</label>
+                            <input id="checkout-cognome" name="cognome" type="text" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkout-indirizzo">Indirizzo di residenza</label>
+                        <input id="checkout-indirizzo" name="indirizzo" type="text" required>
+                    </div>
+
+                    <div class="form-row checkout-form-row-3">
+                        <div class="form-group">
+                            <label for="checkout-citta">Citta</label>
+                            <input id="checkout-citta" name="citta" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout-provincia">Provincia</label>
+                            <input id="checkout-provincia" name="provincia" type="text" maxlength="2" placeholder="RM" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout-cap">CAP</label>
+                            <input id="checkout-cap" name="cap" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkout-email">Email</label>
+                            <input id="checkout-email" name="email" type="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout-cell">Cellulare</label>
+                            <input id="checkout-cell" name="cell" type="tel" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkout-cf-piva">Codice Fiscale o Partita IVA</label>
+                        <input id="checkout-cf-piva" name="cf_piva" type="text" required>
+                    </div>
+
+                    <label class="checkout-privacy-check">
+                        <input type="checkbox" id="checkout-privacy" required>
+                        <span>Dichiaro di aver letto l'informativa privacy e acconsento al trattamento dei dati per acquisto e fatturazione.</span>
+                    </label>
+
+                    <button type="submit" class="btn btn-primary" id="checkout-submit-btn">Vai al pagamento sicuro</button>
+                    <p id="checkout-feedback" class="checkout-feedback" aria-live="polite"></p>
+                </form>
+            </section>
+        </div>
+    `;
+
+    const form = document.getElementById('checkout-customer-form');
+    const feedback = document.getElementById('checkout-feedback');
+    const submitBtn = document.getElementById('checkout-submit-btn');
+    const privacyInput = document.getElementById('checkout-privacy');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        submitBtn.disabled = true;
+        feedback.textContent = '';
+        feedback.classList.remove('is-visible');
+
+        const customer = collectCheckoutCustomer(form);
+        const validationError = validateCheckoutCustomer(customer, privacyInput.checked);
+        if (validationError) {
+            feedback.textContent = validationError;
+            feedback.classList.add('is-visible');
+            submitBtn.disabled = false;
+            return;
+        }
 
         try {
-            const payload = buildCheckoutPayload(getCart());
+            const payload = isCoaching
+                ? buildCoachingCheckoutPayload(coachingPlan, customer)
+                : buildProgramCheckoutPayload(getCart(), customer);
             const url = await createCheckoutSession(payload);
             window.location.href = url;
         } catch (error) {
             feedback.textContent = error.message || 'Errore durante il checkout';
             feedback.classList.add('is-visible');
-            checkoutBtn.disabled = false;
+            submitBtn.disabled = false;
         }
     });
 }
@@ -837,7 +1103,41 @@ function initShopActions() {
 function initCheckoutResultPage() {
     const successNode = document.getElementById('checkout-success-page');
     if (successNode) {
+        const params = new URLSearchParams(window.location.search);
+        const orderType = (params.get('order_type') || 'program').toLowerCase();
+        const titleNode = document.getElementById('checkout-success-title');
+        const textNode = document.getElementById('checkout-success-text');
+
+        if (orderType === 'coaching') {
+            if (titleNode) titleNode.textContent = 'Richiesta coaching completata';
+            if (textNode) {
+                textNode.textContent = 'Pagamento ricevuto. Ti ricontatteremo entro 24 ore per fissare la call di partenza.';
+            }
+            return;
+        }
+
         clearCart();
+    }
+}
+
+function initCheckoutCancelPage() {
+    const titleNode = document.getElementById('checkout-cancel-title');
+    if (!titleNode) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const orderType = (params.get('order_type') || 'program').toLowerCase();
+    if (orderType !== 'coaching') return;
+
+    const textNode = document.getElementById('checkout-cancel-text');
+    const primaryNode = document.getElementById('checkout-cancel-primary');
+
+    titleNode.textContent = 'Pagamento coaching annullato';
+    if (textNode) {
+        textNode.textContent = 'Nessun addebito effettuato. Quando vuoi puoi riprovare dalla sezione coaching.';
+    }
+    if (primaryNode) {
+        primaryNode.textContent = 'Torna al coaching';
+        primaryNode.href = 'index.html#acquista';
     }
 }
 
@@ -848,6 +1148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     renderListingPage();
     renderProgramPage();
     renderCartPage();
+    renderCheckoutPage();
     initShopActions();
     initCheckoutResultPage();
+    initCheckoutCancelPage();
 });
