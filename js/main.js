@@ -247,9 +247,29 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysJwpfvo4_5_1B
 function initContactForm() {
     const form = document.getElementById('contact-form');
     if (!form) return;
+    const feedback = document.getElementById('contact-form-feedback');
+    const privacyInput = document.getElementById('contact-privacy');
+
+    const clearFeedback = () => {
+        if (!feedback) return;
+        feedback.textContent = '';
+        feedback.classList.remove('is-visible');
+    };
+
+    const showFeedback = (message) => {
+        if (!feedback) return;
+        feedback.textContent = message;
+        feedback.classList.add('is-visible');
+    };
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        clearFeedback();
+
+        if (privacyInput && !privacyInput.checked) {
+            showFeedback('Devi accettare l\'informativa privacy per inviare il messaggio.');
+            return;
+        }
 
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnHTML = submitBtn.innerHTML;
@@ -274,7 +294,10 @@ function initContactForm() {
             name: formData.get('name'),
             email: formData.get('email'),
             subject: formData.get('subject'),
-            message: formData.get('message')
+            message: formData.get('message'),
+            privacyConsent: privacyInput ? privacyInput.checked : false,
+            privacyConsentAt: privacyInput && privacyInput.checked ? new Date().toISOString() : '',
+            privacyPolicyVersion: '2026-04-16'
         };
 
         try {
@@ -297,6 +320,7 @@ function initContactForm() {
         `;
                 submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
                 form.reset();
+                clearFeedback();
 
                 // Reset after 4 seconds
                 setTimeout(() => {
@@ -308,6 +332,7 @@ function initContactForm() {
                 throw new Error(result.message || 'Errore invio');
             }
         } catch (error) {
+            showFeedback('Invio non riuscito. Riprova tra qualche secondo.');
             // Error state
             submitBtn.innerHTML = `
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">

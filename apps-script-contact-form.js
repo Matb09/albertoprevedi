@@ -27,6 +27,15 @@ function doPost(e) {
         const email = data.email || 'Non fornita';
         const subject = data.subject || 'Contatto dal sito';
         const message = data.message || '';
+        const privacyConsent = data.privacyConsent === true || String(data.privacyConsent || '').toLowerCase() === 'true';
+        const privacyConsentAt = data.privacyConsentAt || '';
+        const privacyPolicyVersion = data.privacyPolicyVersion || '';
+
+        if (!privacyConsent) {
+            return ContentService
+                .createTextOutput(JSON.stringify({ success: false, message: 'Consenso privacy mancante' }))
+                .setMimeType(ContentService.MimeType.JSON);
+        }
 
         // Componi il corpo dell'email
         const htmlBody = `
@@ -47,6 +56,14 @@ function doPost(e) {
             <tr>
               <td style="padding: 8px 12px; font-weight: bold; color: #475569;">Oggetto</td>
               <td style="padding: 8px 12px; color: #0f172a;">${subject}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; font-weight: bold; color: #475569;">Consenso privacy</td>
+              <td style="padding: 8px 12px; color: #0f172a;">SI (${privacyPolicyVersion || 'versione non indicata'})</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 12px; font-weight: bold; color: #475569;">Timestamp consenso</td>
+              <td style="padding: 8px 12px; color: #0f172a;">${privacyConsentAt || 'non disponibile'}</td>
             </tr>
           </table>
           <div style="margin-top: 16px; padding: 16px; background: white; border-radius: 8px; border: 1px solid #e2e8f0;">

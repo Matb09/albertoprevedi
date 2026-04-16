@@ -662,7 +662,18 @@ function getCoachingPlanByMonths(months) {
     return SHOP_CONFIG.coachingPlans.find((plan) => plan.months === normalizedMonths) || null;
 }
 
-function buildProgramCheckoutPayload(cart, customer) {
+function normalizeCheckoutPrivacy(rawPrivacy) {
+    const privacy = rawPrivacy && typeof rawPrivacy === 'object' ? rawPrivacy : {};
+    const accepted = privacy.accepted === true;
+
+    return {
+        accepted,
+        acceptedAt: accepted ? String(privacy.acceptedAt || '').slice(0, 64) : '',
+        policyVersion: String(privacy.policyVersion || '').slice(0, 40)
+    };
+}
+
+function buildProgramCheckoutPayload(cart, customer, privacy) {
     const totals = calculateCartTotals(cart);
     const items = cart
         .map((item) => {
@@ -683,6 +694,7 @@ function buildProgramCheckoutPayload(cart, customer) {
         orderType: 'program',
         currency: SHOP_CONFIG.currency,
         customer,
+        privacy: normalizeCheckoutPrivacy(privacy),
         items,
         pricing: {
             subtotalCents: totals.subtotalCents,
@@ -701,12 +713,13 @@ function buildProgramCheckoutPayload(cart, customer) {
     };
 }
 
-function buildCoachingCheckoutPayload(plan, customer) {
+function buildCoachingCheckoutPayload(plan, customer, privacy) {
     const urls = getCheckoutUrls('coaching');
     return {
         orderType: 'coaching',
         currency: SHOP_CONFIG.currency,
         customer,
+        privacy: normalizeCheckoutPrivacy(privacy),
         coaching: {
             id: plan.id,
             months: plan.months,
@@ -774,7 +787,7 @@ function validateCheckoutCustomer(customer, privacyChecked) {
     }
 
     if (!privacyChecked) {
-        return 'Devi accettare l\'informativa privacy per proseguire.';
+        return 'Devi accettare informativa privacy e termini di vendita per proseguire.';
     }
 
     return '';
@@ -1040,7 +1053,7 @@ function renderCheckoutPage() {
 
                     <label class="checkout-privacy-check">
                         <input type="checkbox" id="checkout-privacy" required>
-                        <span>Dichiaro di aver letto l'informativa privacy e acconsento al trattamento dei dati per acquisto e fatturazione.</span>
+                        <span>Confermo di aver letto <a href="privacy.html" target="_blank" rel="noopener">Informativa Privacy</a> e <a href="termini-vendita.html" target="_blank" rel="noopener">Termini di vendita</a> e acconsento al trattamento dei dati per acquisto e fatturazione.</span>
                     </label>
 
                     <button type="submit" class="btn btn-primary" id="checkout-submit-btn">Vai al pagamento sicuro</button>
@@ -1070,10 +1083,16 @@ function renderCheckoutPage() {
             return;
         }
 
+        const privacy = {
+            accepted: privacyInput.checked,
+            acceptedAt: privacyInput.checked ? new Date().toISOString() : '',
+            policyVersion: '2026-04-16'
+        };
+
         try {
             const payload = isCoaching
-                ? buildCoachingCheckoutPayload(coachingPlan, customer)
-                : buildProgramCheckoutPayload(getCart(), customer);
+                ? buildCoachingCheckoutPayload(coachingPlan, customer, privacy)
+                : buildProgramCheckoutPayload(getCart(), customer, privacy);
             const url = await createCheckoutSession(payload);
             window.location.href = url;
         } catch (error) {

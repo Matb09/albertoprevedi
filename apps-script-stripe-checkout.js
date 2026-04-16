@@ -10,6 +10,7 @@
 // {
 //   orderType: 'program' | 'coaching',
 //   customer: { nome, cognome, indirizzo, citta, provincia, cap, email, cell, cfPiva },
+//   privacy: { accepted, acceptedAt, policyVersion },
 //   items/pricing (solo program),
 //   coaching (solo coaching),
 //   successUrl,
@@ -36,6 +37,11 @@ function doPost(e) {
     const customerError = validateCustomer(customer);
     if (customerError) {
       return jsonResponse({ error: customerError }, 400);
+    }
+
+    const privacy = normalizePrivacy(payload.privacy || {});
+    if (!privacy.accepted) {
+      return jsonResponse({ error: 'Missing privacy consent' }, 400);
     }
 
     const successUrl = safeUrl(payload.successUrl);
@@ -80,7 +86,10 @@ function doPost(e) {
       customer_cap: customer.cap,
       customer_email: customer.email,
       customer_cell: customer.cell,
-      customer_cf_piva: customer.cfPiva
+      customer_cf_piva: customer.cfPiva,
+      privacy_accepted: privacy.accepted ? 'true' : 'false',
+      privacy_accepted_at: privacy.acceptedAt,
+      privacy_policy_version: privacy.policyVersion || 'unknown'
     };
 
     Object.keys(orderData.metadata).forEach((key) => {
@@ -212,6 +221,17 @@ function normalizeCustomer(rawCustomer) {
     email: String(customer.email || '').trim().toLowerCase().slice(0, 180),
     cell: String(customer.cell || '').trim().slice(0, 50),
     cfPiva: String(customer.cfPiva || '').trim().toUpperCase().slice(0, 32)
+  };
+}
+
+function normalizePrivacy(rawPrivacy) {
+  const privacy = rawPrivacy && typeof rawPrivacy === 'object' ? rawPrivacy : {};
+  const accepted = privacy.accepted === true || String(privacy.accepted || '').toLowerCase() === 'true';
+
+  return {
+    accepted,
+    acceptedAt: accepted ? String(privacy.acceptedAt || '').trim().slice(0, 64) : '',
+    policyVersion: String(privacy.policyVersion || '').trim().slice(0, 40)
   };
 }
 

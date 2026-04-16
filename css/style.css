@@ -1447,6 +1447,37 @@ ul {
     gap: 1.25rem;
 }
 
+.consent-check {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.55rem;
+    align-items: start;
+    color: #334155;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.consent-check input[type="checkbox"] {
+    margin-top: 0.15rem;
+}
+
+.consent-check a {
+    color: var(--primary-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.contact-feedback {
+    display: none;
+    margin-top: -0.5rem;
+    font-size: 0.84rem;
+    color: var(--primary-700);
+}
+
+.contact-feedback.is-visible {
+    display: block;
+}
+
 @media (max-width: 768px) {
     .contact-grid {
         grid-template-columns: 1fr;
@@ -1512,6 +1543,29 @@ ul {
 .social-link svg {
     width: 20px;
     height: 20px;
+}
+
+.footer-legal-links {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin-top: 0.35rem;
+}
+
+.footer-legal-links a {
+    color: #475569;
+    font-size: 0.84rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.footer-legal-links a:hover {
+    color: var(--primary-700);
+    border-color: rgba(2, 132, 199, 0.35);
 }
 
 .footer-copy {
@@ -1844,6 +1898,58 @@ ul {
    =================================================== */
 .shop-page {
     padding-top: clamp(6.5rem, 10vw, 8rem);
+}
+
+.legal-page-section {
+    padding-top: clamp(6.5rem, 10vw, 8rem);
+}
+
+.legal-page-card {
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    padding: clamp(1.2rem, 3vw, 2rem);
+    max-width: 940px;
+    margin: 0 auto;
+}
+
+.legal-updated {
+    color: #64748b;
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1.35rem;
+}
+
+.legal-content h2 {
+    margin-top: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: #0f172a;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+}
+
+.legal-content p {
+    color: var(--dark-400);
+    line-height: 1.65;
+    margin-bottom: 0.65rem;
+}
+
+.legal-content ul {
+    margin: 0.35rem 0 1rem;
+    padding-left: 1.2rem;
+    list-style: disc;
+}
+
+.legal-content li {
+    color: var(--dark-400);
+    line-height: 1.6;
+}
+
+.legal-content a {
+    color: var(--primary-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .shop-heading {
@@ -2763,6 +2869,12 @@ ul {
 
 .checkout-privacy-check input[type="checkbox"] {
     margin-top: 0.15rem;
+}
+
+.checkout-privacy-check a {
+    color: var(--primary-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .checkout-form .btn {

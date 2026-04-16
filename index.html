@@ -7,7 +7,7 @@
     <title>Alberto Prevedi Prep Coach</title>
     <meta name="description"
         content="Coach di Bodybuilding con oltre 15 anni di esperienza, Dr. magistrale in Scienze della Nutrizione Umana. Personal Trainer certificato ISSA e FIPE.">
-    <link rel="stylesheet" href="css/style.css?v=20260413-1">
+    <link rel="stylesheet" href="css/style.css?v=20260416-1">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='80' height='80' x='10' y='10' rx='20' fill='%230ea5e9'/><text x='50' y='65' fill='white' font-family='sans-serif' font-weight='500' font-size='45' text-anchor='middle'>AP</text></svg>">
 </head>
@@ -565,6 +565,11 @@
                         <textarea id="message" name="message" placeholder="Raccontami i tuoi obiettivi..." rows="5"
                             required></textarea>
                     </div>
+                    <label class="consent-check">
+                        <input type="checkbox" id="contact-privacy" name="privacy_consent" required>
+                        <span>Ho letto l'<a href="privacy.html" target="_blank" rel="noopener">Informativa Privacy</a> e acconsento al trattamento dei dati per la gestione della richiesta.</span>
+                    </label>
+                    <p id="contact-form-feedback" class="contact-feedback" aria-live="polite"></p>
                     <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18"
                             height="18">
@@ -618,13 +623,18 @@
                         </svg>
                     </a>
                 </div>
+                <div class="footer-legal-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="cookie.html">Cookie Policy</a>
+                    <a href="termini-vendita.html">Termini di vendita</a>
+                </div>
                 <p class="footer-copy">&copy; 2026 Alberto Prevedi. Tutti i diritti riservati.</p>
             </div>
         </div>
     </footer>
 
     <script src="js/gallery-data.js?v=20260401-4"></script>
-    <script src="js/main.js?v=20260410-1"></script>
+    <script src="js/main.js?v=20260416-1"></script>
     <!-- deploy-trigger: 2026-04-13 -->
 </body>
 
