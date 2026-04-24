@@ -6,15 +6,6 @@
 /* ═══════════════════════════════════════════════════
    FONTS
    ═══════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap');
-
-@font-face {
-    font-family: 'Bacalisties';
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: local('Bacalisties'), url('../fonts/Bacalisties.woff') format('woff');
-}
 
 /* ── CSS Custom Properties ── */
 :root {
@@ -433,29 +424,34 @@ ul {
 }
 
 /* Hero side images (desktop only) */
-.hero-side-img {
+.hero-side-media {
     display: none;
     position: absolute;
     bottom: 0;
-    max-height: 85%;
-    width: auto;
+    height: 85%;
     z-index: 1;
     pointer-events: none;
     -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
     mask-image: linear-gradient(to bottom, black 20%, transparent 85%);
 }
 
-.hero-side-img--left {
-    left: 0;
-    max-height: 95%;
+.hero-side-media img {
+    max-width: none;
+    width: auto;
+    height: 100%;
 }
 
-.hero-side-img--right {
+.hero-side-media--left {
+    left: 0;
+    height: 95%;
+}
+
+.hero-side-media--right {
     right: 0;
 }
 
 @media (min-width: 1024px) {
-    .hero-side-img {
+    .hero-side-media {
         display: block;
     }
 }

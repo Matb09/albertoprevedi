@@ -18,6 +18,16 @@
     checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbxNB1mwyw5BhWvLQS8IG4cqfAljNTPnR7NqbQ-zpcIe3Yn4gKpgR9vNTLMZ7gcogDaT/exec'
 };
 
+function buildCoverAsset(baseName, fallback) {
+    return {
+        src: `assets/optimized/covers/480/${baseName}.webp`,
+        srcSet: `assets/optimized/covers/480/${baseName}.webp 480w, assets/optimized/covers/960/${baseName}.webp 960w`,
+        fallback,
+        width: 960,
+        height: 1440
+    };
+}
+
 const PROGRAM_CATALOG = [
     {
         id: 'ppl-base',
@@ -27,7 +37,7 @@ const PROGRAM_CATALOG = [
         category: 'Push Pull Legs',
         shortDescription: 'Split su 3 giornate con progressione guidata e volumi bilanciati.',
         longDescription: 'Programma in stile Push Pull Legs pensato per crescita muscolare costante e gestione ottimale del recupero settimanale.',
-        cover: 'assets/covers/ppl.png',
+        cover: buildCoverAsset('ppl', 'assets/covers/ppl.png'),
         pdf: 'assets/programs/ppl-programma.pdf'
     },
     {
@@ -38,7 +48,7 @@ const PROGRAM_CATALOG = [
         category: '4 Split',
         shortDescription: 'Focus specifico su distretto upper per migliorare volumi e dettagli.',
         longDescription: 'Programma 4 split con priorita su tronco e arti superiori, mantenendo equilibrio su lower body e recupero.',
-        cover: 'assets/covers/4-split-enfasi-upper-body.png',
+        cover: buildCoverAsset('4-split-enfasi-upper-body', 'assets/covers/4-split-enfasi-upper-body.png'),
         pdf: 'assets/programs/programma-4-split-enfasi-upper-body.pdf'
     },
     {
@@ -49,7 +59,7 @@ const PROGRAM_CATALOG = [
         category: '5 Split',
         shortDescription: 'Split su 5 sedute con struttura avanzata e alta specificita.',
         longDescription: 'Programma 5 split per atleti intermedi/avanzati che desiderano incrementare densita e qualita muscolare.',
-        cover: 'assets/covers/5-split-296.png',
+        cover: buildCoverAsset('5-split-296', 'assets/covers/5-split-296.png'),
         pdf: 'assets/programs/programma-5-split-296.pdf'
     },
     {
@@ -60,7 +70,7 @@ const PROGRAM_CATALOG = [
         category: '5 Split',
         shortDescription: 'Variante 5 split con distribuzione complementare dei gruppi muscolari.',
         longDescription: 'Versione alternativa del 5 split, utile per variare stimoli e frequenze durante i diversi mesocicli.',
-        cover: 'assets/covers/5-split-299.png',
+        cover: buildCoverAsset('5-split-299', 'assets/covers/5-split-299.png'),
         pdf: 'assets/programs/programma-5-split-299.pdf'
     },
     {
@@ -71,7 +81,7 @@ const PROGRAM_CATALOG = [
         category: '4 Split',
         shortDescription: 'Upper/Lower su 4 giornate con approccio semplice e progressivo.',
         longDescription: 'Struttura upper lower equilibrata, ottima per progressione lineare su fondamentali e complementari.',
-        cover: 'assets/covers/upper1-lower1-upper2-lower2.png',
+        cover: buildCoverAsset('upper1-lower1-upper2-lower2', 'assets/covers/upper1-lower1-upper2-lower2.png'),
         pdf: 'assets/programs/upper1-lower1-upper2-lower2.pdf'
     },
     {
@@ -82,7 +92,7 @@ const PROGRAM_CATALOG = [
         category: '4 Split',
         shortDescription: 'Versione bis con variazioni esercizi e gestione fatigue migliorata.',
         longDescription: 'Programma upper lower con varianti tecniche per mantenere progressione e qualita esecutiva nel medio periodo.',
-        cover: 'assets/covers/upper1-lower1-upper2-lower2-bis.png',
+        cover: buildCoverAsset('upper1-lower1-upper2-lower2-bis', 'assets/covers/upper1-lower1-upper2-lower2-bis.png'),
         pdf: 'assets/programs/upper1-lower1-upper2-lower2-bis.pdf'
     },
     {
@@ -93,7 +103,7 @@ const PROGRAM_CATALOG = [
         category: '4 Split',
         shortDescription: 'Template upper/lower con logica MAV e progressione autoregolata.',
         longDescription: 'Programma upper lower con impostazione MAV, pensato per modulare carico e volume in base alla risposta individuale.',
-        cover: 'assets/covers/upper-lower-mav.png',
+        cover: buildCoverAsset('upper-lower-mav', 'assets/covers/upper-lower-mav.png'),
         pdf: 'assets/programs/upper1-lower1-upper2-lower2-mav.pdf'
     }
 ];

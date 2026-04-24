@@ -32,6 +32,39 @@ function formatEuro(cents) {
     return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format((cents || 0) / 100);
 }
 
+function getProgramCover(program) {
+    if (program && program.cover && typeof program.cover === 'object') {
+        return program.cover;
+    }
+
+    return {
+        src: program && typeof program.cover === 'string' ? program.cover : '',
+        srcSet: '',
+        fallback: program && typeof program.cover === 'string' ? program.cover : '',
+        width: 960,
+        height: 1440
+    };
+}
+
+function renderResponsiveProgramImage(program, options = {}) {
+    const {
+        className = '',
+        alt = '',
+        loading = 'lazy',
+        sizes = '100vw',
+        fetchPriority = ''
+    } = options;
+    const cover = getProgramCover(program);
+    const classAttr = className ? ` class="${className}"` : '';
+    const srcSetAttr = cover.srcSet ? ` srcset="${cover.srcSet}" sizes="${sizes}"` : '';
+    const fallbackAttr = cover.fallback ? ` data-fallback="${cover.fallback}"` : '';
+    const fetchPriorityAttr = fetchPriority ? ` fetchpriority="${fetchPriority}"` : '';
+    const widthAttr = cover.width ? ` width="${cover.width}"` : '';
+    const heightAttr = cover.height ? ` height="${cover.height}"` : '';
+
+    return `<img${classAttr} src="${cover.src}" alt="${alt}" loading="${loading}" decoding="async"${srcSetAttr}${fetchPriorityAttr}${fallbackAttr}${widthAttr}${heightAttr} onerror="if(this.dataset.fallback && this.dataset.fallbackApplied !== 'true'){this.dataset.fallbackApplied='true';this.src=this.dataset.fallback;this.removeAttribute('srcset');this.removeAttribute('sizes');}">`;
+}
+
 function safeParseJSON(value, fallback) {
     try {
         return JSON.parse(value);
@@ -158,7 +191,7 @@ function renderCartDropdown() {
 
     const preview = items.slice(0, 3).map((item) => `
         <li class="cart-dropdown-item">
-            <img src="${item.product.cover}" alt="${item.product.title}">
+            ${renderResponsiveProgramImage(item.product, { alt: item.product.title, sizes: '92px' })}
             <div>
                 <strong>${item.product.title}</strong>
                 <span>Programma singolo</span>
@@ -521,7 +554,7 @@ function renderListingPage() {
         return `
         <article class="shop-card reveal visible">
             <a href="${buildProgramDetailUrl(program.slug, selectedSet)}" class="shop-card-cover-link" aria-label="${program.title}">
-                <img class="shop-card-cover" src="${program.cover}" alt="Copertina ${program.title}" loading="lazy">
+                ${renderResponsiveProgramImage(program, { className: 'shop-card-cover', alt: `Copertina ${program.title}`, sizes: '(min-width: 1200px) 360px, (min-width: 768px) 45vw, 100vw' })}
             </a>
             <div class="shop-card-body">
                 <p class="shop-card-category">${program.category}</p>
@@ -573,7 +606,7 @@ function renderProgramPage() {
     wrapper.innerHTML = `
         <article class="pdp-layout reveal">
             <div class="pdp-media">
-                <img src="${program.cover}" alt="Copertina ${program.title}">
+                ${renderResponsiveProgramImage(program, { alt: `Copertina ${program.title}`, loading: 'eager', fetchPriority: 'high', sizes: '(min-width: 992px) 420px, 100vw' })}
             </div>
             <div class="pdp-content">
                 <p class="shop-card-category">${program.category}</p>
@@ -870,7 +903,7 @@ function renderCartPage() {
                 <div class="cart-item-list">
                     ${items.map((item) => `
                         <article class="cart-item">
-                            <img src="${item.product.cover}" alt="${item.product.title}">
+                            ${renderResponsiveProgramImage(item.product, { alt: item.product.title, sizes: '92px' })}
                             <div class="cart-item-main">
                                 <p class="shop-card-category">${item.product.category}</p>
                                 <h3>${item.product.title}</h3>

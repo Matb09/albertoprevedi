@@ -7,7 +7,10 @@
     <title>Alberto Prevedi Prep Coach</title>
     <meta name="description"
         content="Coach di Bodybuilding con oltre 15 anni di esperienza, Dr. magistrale in Scienze della Nutrizione Umana. Personal Trainer certificato ISSA e FIPE.">
-    <link rel="stylesheet" href="css/style.css?v=20260416-1">
+    <link rel="preload" href="fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/Outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="css/fonts.css?v=20260424-1">
+    <link rel="stylesheet" href="css/style.css?v=20260424-1">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='80' height='80' x='10' y='10' rx='20' fill='%230ea5e9'/><text x='50' y='65' fill='white' font-family='sans-serif' font-weight='500' font-size='45' text-anchor='middle'>AP</text></svg>">
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="3121a22e-13b9-4626-b3c3-56b96c4b1293" data-blockingmode="auto" type="text/javascript"></script>
@@ -87,8 +90,14 @@
     <section class="hero" id="hero">
         <div class="hero-orb hero-orb--1"></div>
         <div class="hero-orb hero-orb--2"></div>
-        <img src="left_header.png" alt="" class="hero-side-img hero-side-img--left">
-        <img src="right_header.png" alt="" class="hero-side-img hero-side-img--right">
+        <picture class="hero-side-media hero-side-media--left" aria-hidden="true">
+            <source media="(min-width: 1024px)" srcset="assets/optimized/hero/960/left_header.webp 960w, assets/optimized/hero/1440/left_header.webp 1440w" sizes="(min-width: 1600px) 24vw, 20vw">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
+        <picture class="hero-side-media hero-side-media--right" aria-hidden="true">
+            <source media="(min-width: 1024px)" srcset="assets/optimized/hero/960/right_header.webp 960w, assets/optimized/hero/1440/right_header.webp 1440w" sizes="(min-width: 1600px) 24vw, 20vw">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="" loading="lazy" decoding="async" fetchpriority="low">
+        </picture>
         <div class="hero-content">
             <h1>
                 Alberto Prevedi
@@ -121,8 +130,11 @@
             <div class="about-grid">
                 <div class="about-image-wrapper reveal">
                     <div class="about-image-glow"></div>
-                    <img src="alberto.JPG" alt="Alberto Prevedi" class="about-image"
-                        onerror="this.style.background='linear-gradient(135deg, #1e293b, #0c4a6e)'; this.style.display='flex'; this.alt='';">
+                    <img src="assets/optimized/about/480/alberto.webp"
+                        srcset="assets/optimized/about/480/alberto.webp 480w, assets/optimized/about/960/alberto.webp 960w"
+                        sizes="(min-width: 1200px) 420px, (min-width: 768px) 45vw, 92vw" alt="Alberto Prevedi"
+                        class="about-image" loading="lazy" decoding="async" fetchpriority="low" data-fallback="alberto.JPG"
+                        onerror="if (this.dataset.fallback && this.dataset.fallbackApplied !== 'true') { this.dataset.fallbackApplied = 'true'; this.src = this.dataset.fallback; this.removeAttribute('srcset'); return; } this.style.background='linear-gradient(135deg, #1e293b, #0c4a6e)'; this.style.display='flex'; this.alt='';">
                 </div>
                 <div class="about-text">
                     <div class="section-label reveal">
@@ -252,7 +264,7 @@
                 <!-- Agonisti -->
                 <div class="client-card reveal">
                     <div class="client-icon">
-                        <img src="bodybuilding.png" alt="" class="path-icon">
+                        <img src="bodybuilding.png" alt="" class="path-icon" loading="lazy" decoding="async" width="42" height="42">
                     </div>
                     <h3>Agonisti Bodybuilding</h3>
                     <p>Preparazione atletica e nutrizionale completa per competizioni nelle principali federazioni
@@ -269,7 +281,7 @@
                 <!-- Dimagrimento -->
                 <div class="client-card reveal">
                     <div class="client-icon">
-                        <img src="trainer.png" alt="" class="path-icon">
+                        <img src="trainer.png" alt="" class="path-icon" loading="lazy" decoding="async" width="42" height="42">
                     </div>
                     <h3>Fitness & Dimagrimento</h3>
                     <p>Percorsi personalizzati per chi cerca <strong>benessere</strong> e vuole vedersi bene allo
@@ -278,7 +290,7 @@
                 <!-- Imprenditori -->
                 <div class="client-card reveal">
                     <div class="client-icon">
-                        <img src="businessman.png" alt="" class="path-icon">
+                        <img src="businessman.png" alt="" class="path-icon" loading="lazy" decoding="async" width="42" height="42">
                     </div>
                     <h3>Imprenditori & Professionisti</h3>
                     <p>Programmi dedicati a imprenditori e lavoratori autonomi per migliorare non solo l'aspetto fisico
@@ -674,8 +686,8 @@
         </div>
     </footer>
 
-    <script src="js/gallery-data.js?v=20260401-4"></script>
-    <script src="js/main.js?v=20260416-1"></script>
+    <script src="js/gallery-data.js?v=20260424-1"></script>
+    <script src="js/main.js?v=20260424-1"></script>
     <!-- deploy-trigger: 2026-04-13 -->
 </body>
 
