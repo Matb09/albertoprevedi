@@ -15,7 +15,7 @@
     siteBaseUrl: 'https://albertoprevedi.vercel.app/',
     // Deploy URL dello script che crea la sessione Stripe Checkout.
     // Sostituisci questo valore quando pubblichi l'endpoint.
-    checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbxQdi6CHVc7S0mfINi4-vyvZQ1DrBT7eZLpRnclGQx3s3gzlwXuXQJMUMpD5PGgDFe7/exec'
+    checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbxNB1mwyw5BhWvLQS8IG4cqfAljNTPnR7NqbQ-zpcIe3Yn4gKpgR9vNTLMZ7gcogDaT/exec'
 };
 
 const PROGRAM_CATALOG = [
