@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="it">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout annullato | Alberto Prevedi</title>
-    <meta name="description" content="Checkout annullato programmi Alberto Prevedi.">
+    <title>Photo Gallery | Alberto Prevedi</title>
+    <meta name="description" content="PHOTO GALLERY.">
     <link rel="preload" href="fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/Outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="css/fonts.css?v=20260424-1">
-    <link rel="stylesheet" href="css/style.css?v=20260505-1">
+    <link rel="stylesheet" href="css/style.css?v=20260506-1">
     <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="3121a22e-13b9-4626-b3c3-56b96c4b1293" data-blockingmode="auto" type="text/javascript"></script>
     <script data-cookieconsent="ignore">
         window.dataLayer = window.dataLayer || [];
@@ -29,6 +30,7 @@
         gtag('set', 'url_passthrough', false);
     </script>
 </head>
+
 <body>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -49,25 +51,33 @@
 
     <div data-site-nav></div>
 
-    <section class="section shop-page checkout-state-page">
+    <section class="section section--gallery-page section--results-gallery" id="gallery">
         <div class="bg-mesh"></div>
         <div class="container">
-            <div class="shop-empty-state">
-                <h1 id="checkout-cancel-title">Checkout annullato</h1>
-                <p id="checkout-cancel-text">Nessun problema, il tuo carrello e ancora disponibile.</p>
-                <div class="shop-inline-actions">
-                    <a class="btn btn-primary" id="checkout-cancel-primary" href="carrello.html">Torna al carrello</a>
-                    <a class="btn btn-outline" href="servizi.html#programmi-allenamento">Vai ai programmi</a>
-                </div>
+            <div style="text-align:center; max-width:680px; margin:0 auto;">
+                <div class="section-label reveal" style="margin:0 auto 1rem;">Gallery</div>
+                <h1 class="section-title reveal">I miei <span>risultati</span></h1>
+            </div>
+            <div class="gallery-wrapper">
+                <button class="gallery-nav gallery-nav--prev" id="gallery-prev" aria-label="Precedente">&#8249;</button>
+                <div class="gallery-scroll" id="gallery-scroll"></div>
+                <button class="gallery-nav gallery-nav--next" id="gallery-next" aria-label="Successiva">&#8250;</button>
             </div>
         </div>
     </section>
 
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()" aria-label="Chiudi">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)" aria-label="Precedente">&#8249;</button>
+        <img src="" alt="Gallery image">
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)" aria-label="Successiva">&#8250;</button>
+    </div>
+
     <div data-site-footer></div>
 
+    <script src="js/gallery-data.js?v=20260424-1"></script>
     <script src="js/site-shell.js?v=20260505-1"></script>
-    <script src="js/shop-data.js?v=20260424-1"></script>
-    <script src="js/shop.js?v=20260505-1"></script>
     <script src="js/main.js?v=20260505-1"></script>
 </body>
+
 </html>

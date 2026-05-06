@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initGallery();
     initContactForm();
     initProgramFilters();
+    initServicePurchaseToggles();
 });
 
 function initMobileCartFab() {
@@ -54,6 +55,15 @@ function initCartBadge() {
         badge.style.display = total > 0 ? 'inline-flex' : 'none';
     });
 
+    document.querySelectorAll('[data-cart-empty-label]').forEach((label) => {
+        label.style.display = total > 0 ? 'none' : 'inline-flex';
+    });
+
+    document.querySelectorAll('.nav-cart-link').forEach((link) => {
+        link.href = total > 0 ? 'carrello.html' : 'servizi.html#programmi-allenamento';
+        link.setAttribute('aria-label', total > 0 ? 'Apri carrello' : 'Vai ai programmi');
+    });
+
     const mobileFab = document.querySelector('[data-mobile-cart-fab]');
     if (mobileFab) {
         const onCartPage = /\/?carrello\.html$/i.test(window.location.pathname);
@@ -66,6 +76,8 @@ function initNavbar() {
     const navbar = document.querySelector('.navbar');
     const hamburger = document.querySelector('.hamburger');
     const navLinks = document.querySelector('.nav-links');
+    if (!navbar || !hamburger || !navLinks) return;
+
     const links = navLinks.querySelectorAll('a');
 
     // Scroll effect
@@ -94,6 +106,7 @@ function initNavbar() {
     // Active link highlight on scroll
     const sections = document.querySelectorAll('.section[id]');
     const highlightNav = () => {
+        if (!sections.length) return;
         const scrollPos = window.scrollY + 120;
         sections.forEach(section => {
             const top = section.offsetTop;
@@ -106,6 +119,7 @@ function initNavbar() {
         });
     };
     window.addEventListener('scroll', highlightNav, { passive: true });
+    highlightNav();
 }
 
 /* ── Scroll Reveal ── */
@@ -472,5 +486,41 @@ function initProgramFilters() {
         const isOpen = subOptions.classList.contains('open');
         subOptions.classList.toggle('open', !isOpen);
         subBtn.classList.toggle('open', !isOpen);
+    });
+}
+
+function initServicePurchaseToggles() {
+    const toggles = document.querySelectorAll('[data-service-toggle-target]');
+    if (!toggles.length) return;
+
+    function syncToggleState(targetId, isOpen) {
+        document.querySelectorAll(`[data-service-toggle-target="${targetId}"]`).forEach((toggle) => {
+            toggle.classList.toggle('open', isOpen);
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+    }
+
+    toggles.forEach((toggle) => {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = toggle.getAttribute('data-service-toggle-target');
+            const target = targetId ? document.getElementById(targetId) : null;
+            if (!target) return;
+
+            const isOpen = target.classList.contains('open');
+
+            document.querySelectorAll('.service-purchase-options').forEach((options) => {
+                options.classList.remove('open');
+            });
+            toggles.forEach((node) => {
+                node.classList.remove('open');
+                node.setAttribute('aria-expanded', 'false');
+            });
+
+            if (!isOpen) {
+                target.classList.add('open');
+                syncToggleState(targetId, true);
+            }
+        });
     });
 }

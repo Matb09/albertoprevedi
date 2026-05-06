@@ -184,7 +184,7 @@ function renderCartDropdown() {
         cartDropdownNode.innerHTML = `
             <div class="cart-dropdown-header">Carrello</div>
             <p class="cart-dropdown-empty">Il carrello e vuoto.</p>
-            <a class="btn btn-primary cart-dropdown-cta" href="programmi.html">Sfoglia i programmi</a>
+            <a class="btn btn-primary cart-dropdown-cta" href="servizi.html#programmi-allenamento">Vai ai programmi</a>
         `;
         return;
     }
@@ -230,6 +230,12 @@ function initCartUi() {
     renderCartDropdown();
 
     cartTriggerNode.addEventListener('click', (event) => {
+        if (getCartCount() === 0) {
+            closeCartDropdown();
+            cartTriggerNode.href = 'servizi.html#programmi-allenamento';
+            return;
+        }
+
         event.preventDefault();
         if (!cartDropdownNode) return;
         const isOpen = cartDropdownNode.classList.contains('open');
@@ -273,6 +279,15 @@ function updateCartBadges() {
     document.querySelectorAll('[data-cart-count]').forEach((node) => {
         node.textContent = String(count);
         node.style.display = count > 0 ? 'inline-flex' : 'none';
+    });
+
+    document.querySelectorAll('[data-cart-empty-label]').forEach((node) => {
+        node.style.display = count > 0 ? 'none' : 'inline-flex';
+    });
+
+    document.querySelectorAll('.nav-cart-link').forEach((node) => {
+        node.href = count > 0 ? 'carrello.html' : 'servizi.html#programmi-allenamento';
+        node.setAttribute('aria-label', count > 0 ? 'Apri carrello' : 'Vai ai programmi');
     });
 
     const mobileFab = document.querySelector('[data-mobile-cart-fab]');
@@ -421,6 +436,18 @@ const LISTING_FILTER_SECTIONS = {
             split: {
                 key: 'split',
                 match: (program) => program.group === 'split'
+            },
+            'ppl-upper': {
+                key: 'ppl-upper',
+                match: (program) => program.group === 'ppl' || program.slug.includes('upper-lower')
+            },
+            'split-456': {
+                key: 'split-456',
+                match: (program) => (
+                    program.slug.includes('4-upper') ||
+                    program.slug.includes('split-5-') ||
+                    program.slug.includes('split-6')
+                )
             }
         }
     }
@@ -534,7 +561,9 @@ function renderListingPage() {
     const selectedSet = getSelectedListingFilters();
     const cartIds = new Set(getCart().map((item) => item.id));
     const programs = selectedSet.size > 0
-        ? PROGRAM_CATALOG.filter((program) => selectedSet.has(program.group))
+        ? PROGRAM_CATALOG.filter((program) => {
+            return [...selectedSet].some((key) => LISTING_FILTERS[key] && LISTING_FILTERS[key].match(program));
+        })
         : PROGRAM_CATALOG;
     updateListingFilterCheckboxes(selectedSet);
 
@@ -889,7 +918,7 @@ function renderCartPage() {
             <div class="shop-empty-state">
                 <h1>Il carrello e vuoto</h1>
                 <p>Aggiungi almeno un programma per proseguire al checkout.</p>
-                <a class="btn btn-primary cart-empty-cta" href="programmi.html">Vai al listing programmi</a>
+                <a class="btn btn-primary cart-empty-cta" href="programmi.html">Vai ai programmi</a>
             </div>
         `;
         return;
@@ -1005,7 +1034,7 @@ function renderCheckoutPage() {
             <div class="shop-empty-state">
                 <h1>Carrello vuoto</h1>
                 <p>Aggiungi almeno un programma prima del checkout.</p>
-                <a class="btn btn-primary" href="programmi.html">Vai ai programmi</a>
+                <a class="btn btn-primary" href="servizi.html#programmi-allenamento">Vai ai programmi</a>
             </div>
         `;
         return;
@@ -1015,8 +1044,8 @@ function renderCheckoutPage() {
         wrapper.innerHTML = `
             <div class="shop-empty-state">
                 <h1>Piano coaching non valido</h1>
-                <p>Seleziona nuovamente il percorso coaching dalla home.</p>
-                <a class="btn btn-primary" href="index.html#acquista">Torna ad acquista</a>
+                <p>Seleziona nuovamente il percorso coaching.</p>
+                <a class="btn btn-primary" href="servizi.html#coaching-online">Il coaching</a>
             </div>
         `;
         return;
@@ -1188,8 +1217,8 @@ function initCheckoutCancelPage() {
         textNode.textContent = 'Nessun addebito effettuato. Quando vuoi puoi riprovare dalla sezione coaching.';
     }
     if (primaryNode) {
-        primaryNode.textContent = 'Torna al coaching';
-        primaryNode.href = 'index.html#acquista';
+        primaryNode.textContent = 'Il coaching';
+        primaryNode.href = 'servizi.html#coaching-online';
     }
 }
 
