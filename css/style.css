@@ -143,6 +143,26 @@ ul {
     padding-top: calc(var(--section-py) + 4rem);
 }
 
+.section--about-page {
+    padding-top: calc(var(--section-py) + 2.5rem);
+}
+
+.section--about-page .about-grid {
+    align-items: start;
+}
+
+.about-page-media {
+    display: flex;
+    flex-direction: column;
+    align-self: start;
+}
+
+.about-copy-card {
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 18px 40px rgba(148, 163, 184, 0.12);
+}
+
 .section-label {
     display: inline-flex;
     align-items: center;
