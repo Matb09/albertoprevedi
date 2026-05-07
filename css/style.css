@@ -2428,12 +2428,13 @@ ul {
 
 .pdp-layout {
     display: grid;
-    grid-template-columns: minmax(280px, 420px) 1fr;
-    gap: 2rem;
+    grid-template-columns: minmax(340px, 520px) minmax(0, 1fr);
+    gap: 2.25rem;
     align-items: start;
 }
 
 .pdp-media {
+    align-self: start;
     border-radius: var(--radius-xl);
     overflow: hidden;
     border: 1px solid rgba(14, 165, 233, 0.24);
@@ -2442,9 +2443,10 @@ ul {
 
 .pdp-media img {
     width: 100%;
+    height: auto;
     display: block;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+    aspect-ratio: auto;
+    object-fit: contain;
 }
 
 .pdp-content {

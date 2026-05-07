@@ -635,7 +635,7 @@ function renderProgramPage() {
     wrapper.innerHTML = `
         <article class="pdp-layout reveal">
             <div class="pdp-media">
-                ${renderResponsiveProgramImage(program, { alt: `Copertina ${program.title}`, loading: 'eager', fetchPriority: 'high', sizes: '(min-width: 992px) 420px, 100vw' })}
+                ${renderResponsiveProgramImage(program, { alt: `Copertina ${program.title}`, loading: 'eager', fetchPriority: 'high', sizes: '(min-width: 1280px) 520px, (min-width: 992px) 42vw, 100vw' })}
             </div>
             <div class="pdp-content">
                 <p class="shop-card-category">${program.category}</p>
