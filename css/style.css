@@ -3772,6 +3772,51 @@ ul {
         justify-content: center;
     }
 
+    .footer-payment-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.7rem;
+        align-items: center;
+    }
+
+    .payment-logo-card {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        padding: 0.5rem 0.65rem;
+        border-radius: 16px;
+    }
+
+    .payment-logo--visa {
+        height: 30px;
+    }
+
+    .payment-logo--mastercard {
+        height: 22px;
+    }
+
+    .payment-logo--paypal {
+        height: 18px;
+    }
+
+    .footer-menu-links {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.45rem 0;
+    }
+
+    .footer-menu-links a {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .footer-menu-links a:not(:last-child)::after {
+        content: "|";
+        margin: 0 0.7rem;
+        color: rgba(71, 85, 105, 0.55);
+    }
+
     .service-subnav {
         width: 100%;
         border-radius: var(--radius-xl);
