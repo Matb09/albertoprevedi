@@ -168,9 +168,11 @@ function buildCoachingOrderData(rawCoaching) {
     totalCents: coaching.priceCents,
     orderLabel: coaching.label,
     productName: coaching.label,
-    productDescription: `Percorso coaching online ${coaching.months} mesi`,
+    productDescription: `${coaching.trackLabel || 'Percorso coaching online'} - ${coaching.months} mesi`,
     metadata: {
       coaching_id: coaching.id,
+      coaching_track: coaching.trackKey || '',
+      coaching_track_label: coaching.trackLabel || '',
       coaching_months: String(coaching.months)
     }
   };
@@ -193,6 +195,8 @@ function normalizeCoaching(rawCoaching) {
 
   const id = String(rawCoaching.id || '').slice(0, 80);
   const label = String(rawCoaching.label || '').slice(0, 180);
+  const trackKey = String(rawCoaching.trackKey || '').slice(0, 80);
+  const trackLabel = String(rawCoaching.trackLabel || '').slice(0, 120);
   const months = parseInt(rawCoaching.months, 10);
   const priceCents = parseInt(rawCoaching.priceCents, 10);
 
@@ -203,6 +207,8 @@ function normalizeCoaching(rawCoaching) {
   return {
     id,
     label,
+    trackKey,
+    trackLabel,
     months,
     priceCents
   };

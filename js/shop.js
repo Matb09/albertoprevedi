@@ -184,7 +184,7 @@ function renderCartDropdown() {
         cartDropdownNode.innerHTML = `
             <div class="cart-dropdown-header">Carrello</div>
             <p class="cart-dropdown-empty">Il carrello e vuoto.</p>
-            <a class="btn btn-primary cart-dropdown-cta" href="servizi.html#programmi-allenamento">Vai ai programmi</a>
+            <a class="btn btn-primary cart-dropdown-cta" href="servizi.html">Vai ai servizi</a>
         `;
         return;
     }
@@ -232,7 +232,7 @@ function initCartUi() {
     cartTriggerNode.addEventListener('click', (event) => {
         if (getCartCount() === 0) {
             closeCartDropdown();
-            cartTriggerNode.href = 'servizi.html#programmi-allenamento';
+            cartTriggerNode.href = 'servizi.html';
             return;
         }
 
@@ -286,8 +286,8 @@ function updateCartBadges() {
     });
 
     document.querySelectorAll('.nav-cart-link').forEach((node) => {
-        node.href = count > 0 ? 'carrello.html' : 'servizi.html#programmi-allenamento';
-        node.setAttribute('aria-label', count > 0 ? 'Apri carrello' : 'Vai ai programmi');
+        node.href = count > 0 ? 'carrello.html' : 'servizi.html';
+        node.setAttribute('aria-label', count > 0 ? 'Apri carrello' : 'Vai ai servizi');
     });
 
     const mobileFab = document.querySelector('[data-mobile-cart-fab]');
@@ -718,9 +718,22 @@ function getCheckoutUrls(orderType) {
     };
 }
 
-function getCoachingPlanByMonths(months) {
-    const normalizedMonths = parseInt(months, 10);
+function getCoachingPlanById(planId) {
     if (!Array.isArray(SHOP_CONFIG.coachingPlans)) return null;
+    const normalizedPlanId = String(planId || '').trim().toLowerCase();
+    if (!normalizedPlanId) return null;
+    return SHOP_CONFIG.coachingPlans.find((plan) => String(plan.id || '').toLowerCase() === normalizedPlanId) || null;
+}
+
+function getCoachingPlanFromParams(params) {
+    if (!Array.isArray(SHOP_CONFIG.coachingPlans)) return null;
+
+    const planId = params.get('plan');
+    const byId = getCoachingPlanById(planId);
+    if (byId) return byId;
+
+    const normalizedMonths = parseInt(params.get('months'), 10);
+    if (!Number.isFinite(normalizedMonths)) return null;
     return SHOP_CONFIG.coachingPlans.find((plan) => plan.months === normalizedMonths) || null;
 }
 
@@ -784,6 +797,8 @@ function buildCoachingCheckoutPayload(plan, customer, privacy) {
         privacy: normalizeCheckoutPrivacy(privacy),
         coaching: {
             id: plan.id,
+            trackKey: plan.trackKey,
+            trackLabel: plan.trackLabel,
             months: plan.months,
             label: plan.label,
             priceCents: plan.priceCents
@@ -918,7 +933,7 @@ function renderCartPage() {
             <div class="shop-empty-state">
                 <h1>Il carrello e vuoto</h1>
                 <p>Aggiungi almeno un programma per proseguire al checkout.</p>
-                <a class="btn btn-primary cart-empty-cta" href="programmi.html">Vai ai programmi</a>
+                <a class="btn btn-primary cart-empty-cta" href="servizi.html">Vai ai servizi</a>
             </div>
         `;
         return;
@@ -1027,14 +1042,14 @@ function renderCheckoutPage() {
         .filter((item) => item.product);
     const programTotals = calculateCartTotals(cart);
 
-    const coachingPlan = isCoaching ? getCoachingPlanByMonths(params.get('months')) : null;
+    const coachingPlan = isCoaching ? getCoachingPlanFromParams(params) : null;
 
     if (!isCoaching && !programItems.length) {
         wrapper.innerHTML = `
             <div class="shop-empty-state">
                 <h1>Carrello vuoto</h1>
                 <p>Aggiungi almeno un programma prima del checkout.</p>
-                <a class="btn btn-primary" href="servizi.html#programmi-allenamento">Vai ai programmi</a>
+                <a class="btn btn-primary" href="servizi.html">Vai ai servizi</a>
             </div>
         `;
         return;
@@ -1058,7 +1073,7 @@ function renderCheckoutPage() {
     wrapper.innerHTML = `
         <div class="checkout-layout">
             <aside class="checkout-summary-panel">
-                <p class="shop-card-category">${isCoaching ? 'Coaching Online' : 'Programmi Allenamento'}</p>
+                <p class="shop-card-category">${isCoaching ? 'Coaching Online Personalizzato' : 'Programmi Allenamento'}</p>
                 ${summary}
             </aside>
 

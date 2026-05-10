@@ -53,7 +53,7 @@ function mountSiteNavigation() {
                 <a href="index.html" class="navbar-brand">Alberto<span>Prevedi</span></a>
                 <div class="nav-links" id="nav-links">
                     ${navLinks}
-                    <a href="servizi.html#programmi-allenamento" class="nav-cart-link" aria-label="Apri carrello">
+                    <a href="servizi.html" class="nav-cart-link" aria-label="Apri carrello">
                         <svg class="nav-cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                             <circle cx="9" cy="20" r="1"></circle>
                             <circle cx="17" cy="20" r="1"></circle>

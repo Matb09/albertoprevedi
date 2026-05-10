@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Photo Gallery | Alberto Prevedi</title>
-    <meta name="description" content="PHOTO GALLERY.">
+    <title>Gallery | Alberto Prevedi</title>
+    <meta name="description" content="Gallery divisa in gare, prima e dopo, e momenti personal.">
     <link rel="preload" href="fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/Outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="css/fonts.css?v=20260424-1">
@@ -51,17 +51,60 @@
 
     <div data-site-nav></div>
 
-    <section class="section section--gallery-page section--results-gallery" id="gallery">
+    <section class="section section--gallery-page" id="gallery">
         <div class="bg-mesh"></div>
         <div class="container">
-            <div style="text-align:center; max-width:680px; margin:0 auto;">
+            <div class="gallery-page-copy" style="text-align:center; margin:0 auto 2rem;">
                 <div class="section-label reveal" style="margin:0 auto 1rem;">Gallery</div>
-                <h1 class="section-title reveal">I miei <span>risultati</span></h1>
+                <h1 class="section-title reveal">Risultati, trasformazioni e <span>momenti reali</span></h1>
+                <p class="reveal" style="color:var(--dark-300); font-size:1.05rem;">Esplora la gallery per vedere gare, progressi fisici e momenti di backstage. Ogni sezione mostra un lato diverso del percorso e dei risultati ottenuti.</p>
             </div>
-            <div class="gallery-wrapper">
-                <button class="gallery-nav gallery-nav--prev" id="gallery-prev" aria-label="Precedente">&#8249;</button>
-                <div class="gallery-scroll" id="gallery-scroll"></div>
-                <button class="gallery-nav gallery-nav--next" id="gallery-next" aria-label="Successiva">&#8250;</button>
+
+            <div class="gallery-sections" data-gallery-root>
+                <article class="gallery-category-section reveal" id="gare">
+                    <div class="gallery-category-head">
+                        <div>
+                            <p class="gallery-category-eyebrow">Gare</p>
+                            <h2>Palco, posing e premiazioni</h2>
+                            <p>Una selezione di immagini che raccontano preparazione, stage presence e risultati ottenuti sul palco.</p>
+                        </div>
+                        <div class="gallery-category-nav">
+                            <button class="gallery-nav" type="button" data-gallery-prev aria-label="Scorri indietro la sezione gare">&#8249;</button>
+                            <button class="gallery-nav" type="button" data-gallery-next aria-label="Scorri avanti la sezione gare">&#8250;</button>
+                        </div>
+                    </div>
+                    <div class="gallery-scroll" data-gallery-track="gare"></div>
+                </article>
+
+                <article class="gallery-category-section reveal" id="prima-dopo">
+                    <div class="gallery-category-head">
+                        <div>
+                            <p class="gallery-category-eyebrow">Prima e dopo</p>
+                            <h2>Evoluzioni, confronti e progressi</h2>
+                            <p>Immagini che mostrano cambiamenti fisici, confronti nel tempo e momenti utili a leggere l'evoluzione del lavoro.</p>
+                        </div>
+                        <div class="gallery-category-nav">
+                            <button class="gallery-nav" type="button" data-gallery-prev aria-label="Scorri indietro la sezione prima e dopo">&#8249;</button>
+                            <button class="gallery-nav" type="button" data-gallery-next aria-label="Scorri avanti la sezione prima e dopo">&#8250;</button>
+                        </div>
+                    </div>
+                    <div class="gallery-scroll" data-gallery-track="prima-dopo"></div>
+                </article>
+
+                <article class="gallery-category-section reveal" id="personal">
+                    <div class="gallery-category-head">
+                        <div>
+                            <p class="gallery-category-eyebrow">Personal</p>
+                            <h2>Backstage, relazioni e vita reale</h2>
+                            <p>Allenamenti, backstage, momenti fuori palco e immagini che rendono il progetto piu umano e quotidiano.</p>
+                        </div>
+                        <div class="gallery-category-nav">
+                            <button class="gallery-nav" type="button" data-gallery-prev aria-label="Scorri indietro la sezione personal">&#8249;</button>
+                            <button class="gallery-nav" type="button" data-gallery-next aria-label="Scorri avanti la sezione personal">&#8250;</button>
+                        </div>
+                    </div>
+                    <div class="gallery-scroll" data-gallery-track="personal"></div>
+                </article>
             </div>
         </div>
     </section>
@@ -75,9 +118,9 @@
 
     <div data-site-footer></div>
 
-    <script src="js/gallery-data.js?v=20260424-1"></script>
-    <script src="js/site-shell.js?v=20260505-1"></script>
-    <script src="js/main.js?v=20260505-1"></script>
+    <script src="js/gallery-data.js?v=20260507-3"></script>
+    <script src="js/site-shell.js?v=20260509-1"></script>
+    <script src="js/main.js?v=20260509-3"></script>
 </body>
 
 </html>

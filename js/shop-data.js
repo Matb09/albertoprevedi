@@ -6,8 +6,38 @@
         { quantity: 5, priceCents: 22900, label: 'Pack 5 programmi' }
     ],
     coachingPlans: [
-        { id: 'coaching-6m', months: 6, label: 'Coaching Online - 6 mesi', priceCents: 105000 },
-        { id: 'coaching-12m', months: 12, label: 'Coaching Online - 12 mesi', priceCents: 180000 }
+        {
+            id: 'bb-agonistico-6m',
+            trackKey: 'agonistico',
+            trackLabel: 'BB agonistico e pre-agonistico',
+            months: 6,
+            label: 'BB agonistico e pre-agonistico - 6 mesi',
+            priceCents: 105000
+        },
+        {
+            id: 'bb-agonistico-12m',
+            trackKey: 'agonistico',
+            trackLabel: 'BB agonistico e pre-agonistico',
+            months: 12,
+            label: 'BB agonistico e pre-agonistico - 12 mesi',
+            priceCents: 180000
+        },
+        {
+            id: 'bb-fitness-6m',
+            trackKey: 'fitness',
+            trackLabel: 'BB & fitness',
+            months: 6,
+            label: 'BB & fitness - 6 mesi',
+            priceCents: 105000
+        },
+        {
+            id: 'bb-fitness-12m',
+            trackKey: 'fitness',
+            trackLabel: 'BB & fitness',
+            months: 12,
+            label: 'BB & fitness - 12 mesi',
+            priceCents: 180000
+        }
     ],
     // Opzionale ma consigliato: URL base pubblico del sito (deve essere HTTPS).
     // Se lasciato vuoto, il checkout usa automaticamente l'origin della pagina corrente.
