@@ -1060,7 +1060,7 @@ function renderCheckoutPage() {
             <div class="shop-empty-state">
                 <h1>Piano coaching non valido</h1>
                 <p>Seleziona nuovamente il percorso coaching.</p>
-                <a class="btn btn-primary" href="servizi.html#coaching-online">Il coaching</a>
+                <a class="btn btn-primary" href="servizi.html">Il coaching</a>
             </div>
         `;
         return;
@@ -1233,7 +1233,7 @@ function initCheckoutCancelPage() {
     }
     if (primaryNode) {
         primaryNode.textContent = 'Il coaching';
-        primaryNode.href = 'servizi.html#coaching-online';
+        primaryNode.href = 'servizi.html';
     }
 }
 

@@ -16,7 +16,7 @@ const SITE_PAGE_BY_FILE = {
 
 const SITE_NAV_LINKS = [
     { key: 'chi-sono', href: 'chi-sono.html', label: 'Chi Sono' },
-    { key: 'coaching', href: 'coaching.html', label: 'Il coaching' },
+    { key: 'coaching', href: 'coaching.html', label: 'Il Coaching' },
     { key: 'servizi', href: 'servizi.html', label: 'Servizi' },
     { key: 'gallery', href: 'gallery.html', label: 'Gallery' },
     { key: 'contatti', href: 'contatti.html', label: 'Contatti' }
