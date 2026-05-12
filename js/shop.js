@@ -184,7 +184,7 @@ function renderCartDropdown() {
         cartDropdownNode.innerHTML = `
             <div class="cart-dropdown-header">Carrello</div>
             <p class="cart-dropdown-empty">Il carrello e vuoto.</p>
-            <a class="btn btn-primary cart-dropdown-cta" href="servizi.html">Vai ai servizi</a>
+            <a class="btn btn-primary cart-dropdown-cta" href="servizi.html">Vai ai programmi</a>
         `;
         return;
     }
@@ -287,7 +287,7 @@ function updateCartBadges() {
 
     document.querySelectorAll('.nav-cart-link').forEach((node) => {
         node.href = count > 0 ? 'carrello.html' : 'servizi.html';
-        node.setAttribute('aria-label', count > 0 ? 'Apri carrello' : 'Vai ai servizi');
+        node.setAttribute('aria-label', count > 0 ? 'Apri carrello' : 'Vai ai programmi');
     });
 
     const mobileFab = document.querySelector('[data-mobile-cart-fab]');
@@ -933,7 +933,7 @@ function renderCartPage() {
             <div class="shop-empty-state">
                 <h1>Il carrello e vuoto</h1>
                 <p>Aggiungi almeno un programma per proseguire al checkout.</p>
-                <a class="btn btn-primary cart-empty-cta" href="servizi.html">Vai ai servizi</a>
+                <a class="btn btn-primary cart-empty-cta" href="servizi.html">Vai ai programmi</a>
             </div>
         `;
         return;
@@ -1049,7 +1049,7 @@ function renderCheckoutPage() {
             <div class="shop-empty-state">
                 <h1>Carrello vuoto</h1>
                 <p>Aggiungi almeno un programma prima del checkout.</p>
-                <a class="btn btn-primary" href="servizi.html">Vai ai servizi</a>
+                <a class="btn btn-primary" href="servizi.html">Vai ai programmi</a>
             </div>
         `;
         return;
@@ -1060,7 +1060,7 @@ function renderCheckoutPage() {
             <div class="shop-empty-state">
                 <h1>Piano coaching non valido</h1>
                 <p>Seleziona nuovamente il percorso coaching.</p>
-                <a class="btn btn-primary" href="servizi.html">Il coaching</a>
+                <a class="btn btn-primary" href="coaching.html">Il coaching</a>
             </div>
         `;
         return;
@@ -1233,7 +1233,7 @@ function initCheckoutCancelPage() {
     }
     if (primaryNode) {
         primaryNode.textContent = 'Il coaching';
-        primaryNode.href = 'servizi.html';
+        primaryNode.href = 'coaching.html';
     }
 }
 

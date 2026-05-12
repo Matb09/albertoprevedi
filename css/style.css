@@ -3644,6 +3644,7 @@ ul {
 }
 
 .service-page-hero .section-title {
+    font-size: clamp(1.5rem, 3.2vw, 2.1rem);
     margin-bottom: 1rem;
 }
 
@@ -4208,6 +4209,48 @@ ul {
 .service-duration-link {
     justify-content: center;
     min-height: 3.35rem;
+}
+
+.coaching-path-bullets {
+    list-style: none;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.coaching-path-bullets li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.coaching-path-bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    background: var(--primary-500);
+}
+
+.coaching-hero-note {
+    max-width: 44rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+.coaching-hero-actions {
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .gallery-preview-grid {

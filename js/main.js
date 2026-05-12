@@ -61,7 +61,7 @@ function initCartBadge() {
 
     document.querySelectorAll('.nav-cart-link').forEach((link) => {
         link.href = total > 0 ? 'carrello.html' : 'servizi.html';
-        link.setAttribute('aria-label', total > 0 ? 'Apri carrello' : 'Vai ai servizi');
+        link.setAttribute('aria-label', total > 0 ? 'Apri carrello' : 'Vai ai programmi');
     });
 
     const mobileFab = document.querySelector('[data-mobile-cart-fab]');

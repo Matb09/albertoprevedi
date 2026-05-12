@@ -17,7 +17,7 @@ const SITE_PAGE_BY_FILE = {
 const SITE_NAV_LINKS = [
     { key: 'chi-sono', href: 'chi-sono.html', label: 'Chi Sono' },
     { key: 'coaching', href: 'coaching.html', label: 'Il Coaching' },
-    { key: 'servizi', href: 'servizi.html', label: 'Servizi' },
+    { key: 'servizi', href: 'servizi.html', label: 'Programmi di allenamento' },
     { key: 'gallery', href: 'gallery.html', label: 'Gallery' },
     { key: 'contatti', href: 'contatti.html', label: 'Contatti' }
 ];
@@ -34,7 +34,22 @@ function getCurrentFileName() {
 }
 
 function getCurrentPageKey() {
-    return SITE_PAGE_BY_FILE[getCurrentFileName()] || '';
+    const fileName = getCurrentFileName();
+    if (isCoachingCheckoutContext(fileName)) {
+        return 'coaching';
+    }
+    return SITE_PAGE_BY_FILE[fileName] || '';
+}
+
+function isCoachingCheckoutContext(fileName) {
+    const params = new URLSearchParams(window.location.search || '');
+    if (fileName === 'checkout.html') {
+        return (params.get('flow') || '').toLowerCase() === 'coaching';
+    }
+    if (fileName === 'checkout-success.html' || fileName === 'checkout-cancel.html') {
+        return (params.get('order_type') || '').toLowerCase() === 'coaching';
+    }
+    return false;
 }
 
 function mountSiteNavigation() {
@@ -142,15 +157,6 @@ function mountSiteFooter() {
                                     <div class="footer-partner-copy">
                                         <strong>NUTRAFF</strong>
                                         <span>Codice sconto: ALBECOACH</span>
-                                    </div>
-                                </a>
-                                <a href="https://genolift.com?ta_aff=4BME3NQ2JS&discount=ALBECOACH15" target="_blank" rel="noopener" class="footer-partner-link">
-                                    <div class="footer-partner-logo-wrap footer-partner-logo-wrap--dark">
-                                        <img src="assets/partners/IMG_0341-removebg-preview_1.webp" alt="Logo Genolift" class="footer-partner-logo">
-                                    </div>
-                                    <div class="footer-partner-copy">
-                                        <strong>GENOLIFT</strong>
-                                        <span>Codice sconto: ALBECOACH15</span>
                                     </div>
                                 </a>
                             </div>
