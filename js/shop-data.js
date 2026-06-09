@@ -1,44 +1,106 @@
-﻿const SHOP_CONFIG = {
+﻿// =============================================================
+// COACHING ONLINE - Listino (fonte: Listino_AP.pdf)
+// Descrizione, "adatto a chi", "cosa include" e prezzi presi dal
+// listino ufficiale. I nomi dei livelli del percorso 2 sono
+// riportati come nel PDF. Testo senza accenti, come il resto del sito.
+// =============================================================
+const COACHING_TRACKS = [
+    {
+        key: 'performance',
+        slug: 'bodybuilding-performance',
+        name: 'Bodybuilding Performance',
+        tagline: 'Percorso pensato per atleti agonisti o aspiranti agonisti che vogliono prepararsi con metodo, continuita e supporto tecnico avanzato.',
+        cover: 'assets/covers/BB agonistico e pre agonistico.JPG',
+        coverAlt: 'Bodybuilding Performance',
+        suitableFor: [
+            'Preparare una gara',
+            'Costruire una condizione da palco',
+            'Migliorare performance, estetica e gestione del percorso',
+            'Avere supporto costante nelle fasi piu delicate della preparazione'
+        ],
+        includes: [
+            'Video call iniziale conoscitiva di 45 minuti',
+            'Programma di allenamento personalizzato',
+            'Piano nutrizionale personalizzato',
+            'Coaching tramite WhatsApp',
+            'Check settimanale ogni lunedi mattina',
+            'Reperibilita 7 giorni su 7 per reali necessita',
+            'Check piu frequenti in avvicinamento gara',
+            'Possibilita di call pre-gara quando necessario',
+            'Inserimento nel gruppo WhatsApp e accesso ai video bonus riservati ai membri del team'
+        ],
+        tiers: [
+            { id: 'performance-3m', months: 3, name: '', priceCents: 75000, monthlyCents: 25000 },
+            { id: 'performance-6m', months: 6, name: '', priceCents: 120000, monthlyCents: 20000 },
+            { id: 'performance-12m', months: 12, name: '', priceCents: 220000, monthlyCents: 18300 }
+        ]
+    },
+    {
+        key: 'physique',
+        slug: 'athlete-physique-coaching',
+        name: 'Athlete Physique Coaching',
+        tagline: 'Percorso pensato per uomini che vogliono costruire un fisico da atleta nella vita reale, senza preparazione agonistica.',
+        cover: 'assets/covers/BB e fitness.jpg',
+        coverAlt: 'Athlete Physique Coaching',
+        suitableFor: [
+            'Migliorare composizione corporea',
+            'Aumentare massa muscolare',
+            'Perdere grasso',
+            'Sentirsi piu sicuro del proprio fisico',
+            'Seguire un metodo personalizzato senza vivere da atleta agonista'
+        ],
+        includes: [
+            'Video call iniziale conoscitiva di 45 minuti',
+            'Programma di allenamento personalizzato',
+            'Piano nutrizionale personalizzato',
+            'Coaching tramite WhatsApp',
+            'Check ogni 15 giorni',
+            'Reperibilita dal lunedi mattina al giovedi ore 12:00',
+            'Inserimento nel gruppo WhatsApp e accesso ai video bonus riservati ai membri del team',
+            'Call extra disponibili su richiesta a pagamento'
+        ],
+        tiers: [
+            { id: 'physique-3m', months: 3, name: 'Foundation/Start', priceCents: 60000, monthlyCents: 20000 },
+            { id: 'physique-6m', months: 6, name: 'Build/Progress', priceCents: 90000, monthlyCents: 15000 },
+            { id: 'physique-12m', months: 12, name: 'Season/Evolution', priceCents: 175000, monthlyCents: 14600 }
+        ]
+    }
+];
+
+// Lista piatta usata dal checkout: mantiene la forma legacy
+// (id / trackKey / trackLabel / months / label / priceCents).
+const COACHING_PLANS = COACHING_TRACKS.flatMap((track) =>
+    track.tiers.map((tier) => ({
+        id: tier.id,
+        trackKey: track.key,
+        trackLabel: track.name,
+        months: tier.months,
+        tierName: tier.name || '',
+        label: tier.name
+            ? `${track.name} - ${tier.name} - ${tier.months} mesi`
+            : `${track.name} - ${tier.months} mesi`,
+        priceCents: tier.priceCents
+    }))
+);
+
+// Compatibilita: i vecchi link/ID continuano a funzionare puntando ai nuovi piani.
+const COACHING_PLAN_ALIASES = {
+    'bb-agonistico-6m': 'performance-6m',
+    'bb-agonistico-12m': 'performance-12m',
+    'bb-fitness-6m': 'physique-6m',
+    'bb-fitness-12m': 'physique-12m'
+};
+
+const SHOP_CONFIG = {
     currency: 'EUR',
     singlePriceCents: 6990,
     bundlePricing: [
         { quantity: 3, priceCents: 14900, label: 'Pack 3 programmi' },
         { quantity: 5, priceCents: 22900, label: 'Pack 5 programmi' }
     ],
-    coachingPlans: [
-        {
-            id: 'bb-agonistico-6m',
-            trackKey: 'agonistico',
-            trackLabel: 'BB agonistico e pre-agonistico',
-            months: 6,
-            label: 'BB agonistico e pre-agonistico - 6 mesi',
-            priceCents: 105000
-        },
-        {
-            id: 'bb-agonistico-12m',
-            trackKey: 'agonistico',
-            trackLabel: 'BB agonistico e pre-agonistico',
-            months: 12,
-            label: 'BB agonistico e pre-agonistico - 12 mesi',
-            priceCents: 180000
-        },
-        {
-            id: 'bb-fitness-6m',
-            trackKey: 'fitness',
-            trackLabel: 'BB & fitness',
-            months: 6,
-            label: 'BB & fitness - 6 mesi',
-            priceCents: 105000
-        },
-        {
-            id: 'bb-fitness-12m',
-            trackKey: 'fitness',
-            trackLabel: 'BB & fitness',
-            months: 12,
-            label: 'BB & fitness - 12 mesi',
-            priceCents: 180000
-        }
-    ],
+    coachingTracks: COACHING_TRACKS,
+    coachingPlans: COACHING_PLANS,
+    coachingPlanAliases: COACHING_PLAN_ALIASES,
     // Opzionale ma consigliato: URL base pubblico del sito (deve essere HTTPS).
     // Se lasciato vuoto, il checkout usa automaticamente l'origin della pagina corrente.
     // Esempio: 'https://www.albertoprevedi.it/'

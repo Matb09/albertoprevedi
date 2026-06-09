@@ -8,10 +8,24 @@
     <link rel="preload" href="fonts/Inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="fonts/Outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="css/fonts.css?v=20260424-1">
-    <link rel="stylesheet" href="css/style.css?v=20260507-1">
+    <link rel="stylesheet" href="css/style.css?v=20260608-1">
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='80' height='80' x='10' y='10' rx='20' fill='%230ea5e9'/><text x='50' y='65' fill='white' font-family='sans-serif' font-weight='500' font-size='45' text-anchor='middle'>AP</text></svg>">
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="3121a22e-13b9-4626-b3c3-56b96c4b1293" data-blockingmode="auto" type="text/javascript"></script>
+    <script>
+        /* Cookiebot caricato solo su dominio reale; su localhost viene saltato per lo sviluppo locale (produzione invariata). */
+        (function () {
+            var h = location.hostname;
+            if (h === 'localhost' || h === '127.0.0.1' || h === '::1' || h === '[::1]') return;
+            var s = document.createElement('script');
+            s.id = 'Cookiebot';
+            s.src = 'https://consent.cookiebot.com/uc.js';
+            s.async = false;
+            s.setAttribute('data-cbid', '3121a22e-13b9-4626-b3c3-56b96c4b1293');
+            s.setAttribute('data-blockingmode', 'auto');
+            s.setAttribute('type', 'text/javascript');
+            document.head.appendChild(s);
+        })();
+    </script>
     <script data-cookieconsent="ignore">
         window.dataLayer = window.dataLayer || [];
         function gtag() {
@@ -62,8 +76,8 @@
     <div data-site-footer></div>
 
     <script src="js/site-shell.js?v=20260512-1"></script>
-    <script src="js/shop-data.js?v=20260507-2"></script>
-    <script src="js/shop.js?v=20260512-1"></script>
+    <script src="js/shop-data.js?v=20260608-1"></script>
+    <script src="js/shop.js?v=20260608-1"></script>
     <script src="js/main.js?v=20260509-3"></script>
 </body>
 </html>

@@ -16,9 +16,16 @@
 
 const SPREADSHEET_ID = '1aPZ-M44LC5npbOWcz0D4zpT8nC4DsWzLxuBR8f8gWOE';
 const SHEET_NAME = 'ordini';
-const INTERNAL_EMAILS = ['matteobuffagni09@gmail.com'];
+const INTERNAL_EMAILS = ['albertoprevedi@gmail.com'];
 const SITE_BASE_URL = 'https://albertoprevedi.vercel.app/';
-const COACHING_CONFIRMATION_TEXT = 'Pagamento ricevuto. Ti ricontatteremo entro 24 ore per fissare la call di partenza.';
+const COACHING_CONFIRMATION_TEXT = 'Pagamento ricevuto. Ti ricontatteremo entro 48 ore per fissare la call di partenza.';
+
+// Mittente delle email automatiche.
+// SENDER_EMAIL viene usato come mittente SOLO se e configurato come alias verificato
+// ("Invia messaggi come") nell'account Gmail che esegue lo script; altrimenti si usa
+// l'indirizzo dell'account che esegue lo script (fallback sicuro, nessun errore).
+const SENDER_EMAIL = 'albertoprevedi@gmail.com';
+const SENDER_NAME = 'Alberto Prevedi Team';
 
 const SHEET_COLUMNS = [
   'created_at',
@@ -197,6 +204,20 @@ function markSessionProcessed_(sessionId) {
   PropertiesService.getScriptProperties().setProperty(key, '1');
 }
 
+function withSender_(options) {
+  const opts = options || {};
+  opts.name = SENDER_NAME;
+  try {
+    const aliases = GmailApp.getAliases();
+    if (aliases && aliases.indexOf(SENDER_EMAIL) !== -1) {
+      opts.from = SENDER_EMAIL;
+    }
+  } catch (err) {
+    // Se lo scope Gmail non consente getAliases, si usa il mittente di default.
+  }
+  return opts;
+}
+
 function sendProgramsCustomerEmail_(customer, metadata) {
   if (!customer.email) return;
 
@@ -238,10 +259,7 @@ function sendProgramsCustomerEmail_(customer, metadata) {
     customer.email,
     'Ordine confermato - Programmi Alberto Prevedi',
     'Il tuo ordine e stato confermato. Apri l\'email in HTML per scaricare i PDF.',
-    {
-      htmlBody: htmlBody,
-      name: 'Alberto Prevedi Team'
-    }
+    withSender_({ htmlBody: htmlBody })
   );
 }
 
@@ -261,10 +279,7 @@ function sendCoachingCustomerEmail_(customer, productLabel) {
     customer.email,
     'Ordine coaching confermato - Alberto Prevedi',
     COACHING_CONFIRMATION_TEXT,
-    {
-      htmlBody: htmlBody,
-      name: 'Alberto Prevedi Team'
-    }
+    withSender_({ htmlBody: htmlBody })
   );
 }
 
@@ -295,10 +310,7 @@ function sendInternalCoachingEmail_(customer, row, metadata) {
     </div>
   `;
 
-  const mailOptions = {
-    htmlBody: htmlBody,
-    name: 'Stripe Webhook Bot'
-  };
+  const mailOptions = withSender_({ htmlBody: htmlBody });
   if (customer.email) {
     mailOptions.replyTo = customer.email;
   }

@@ -663,6 +663,80 @@ function renderProgramPage() {
     `;
 }
 
+function renderCoachingDetailPage() {
+    const wrapper = document.getElementById('coaching-pdp');
+    if (!wrapper) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let track = getCoachingTrack(params.get('track'));
+    if (!track) {
+        const planParam = params.get('plan');
+        const plan = planParam ? getCoachingPlanById(planParam) : null;
+        if (plan) track = getCoachingTrack(plan.trackKey);
+    }
+
+    if (!track) {
+        wrapper.innerHTML = `
+            <div class="shop-empty-state">
+                <h2>Percorso non trovato</h2>
+                <p>Controlla il link o torna alla pagina coaching.</p>
+                <a class="btn btn-primary" href="coaching.html">Il coaching</a>
+            </div>
+        `;
+        return;
+    }
+
+    document.title = `${track.name} | Alberto Prevedi`;
+
+    const suitable = (track.suitableFor || []).map((item) => `<li>${item}</li>`).join('');
+    const includes = (track.includes || []).map((item) => `<li>${item}</li>`).join('');
+    const tiers = (track.tiers || []).map((tier) => {
+        const monthly = Number.isFinite(tier.monthlyCents)
+            ? `<span class="coaching-tier-monthly">${formatEuro(tier.monthlyCents)}/mese</span>`
+            : '';
+        const tierName = tier.name ? `<span class="coaching-tier-name">${tier.name}</span>` : '';
+        return `
+            <div class="coaching-tier">
+                <div class="coaching-tier-info">
+                    ${tierName}
+                    <span class="coaching-tier-duration">${tier.months} mesi</span>
+                </div>
+                <div class="coaching-tier-pricing">
+                    <span class="coaching-tier-price">${formatEuro(tier.priceCents)}</span>
+                    ${monthly}
+                </div>
+                <a class="btn btn-primary coaching-tier-cta" href="checkout.html?flow=coaching&plan=${encodeURIComponent(tier.id)}">Procedi al pagamento</a>
+            </div>
+        `;
+    }).join('');
+
+    const cover = track.cover
+        ? `<div class="pdp-media coaching-detail-media"><img src="${track.cover}" alt="${track.coverAlt || track.name}" loading="eager" decoding="async"></div>`
+        : '';
+
+    wrapper.innerHTML = `
+        <article class="pdp-layout coaching-detail reveal visible">
+            ${cover}
+            <div class="pdp-content coaching-detail-content">
+                <p class="shop-card-category">Coaching Online Personalizzato</p>
+                <h1>${track.name}</h1>
+                <p class="pdp-description">${track.tagline}</p>
+
+                <h2 class="coaching-detail-subtitle">Adatto a chi vuole</h2>
+                <ul class="coaching-path-bullets">${suitable}</ul>
+
+                <h2 class="coaching-detail-subtitle">Cosa include</h2>
+                <ul class="pdp-features">${includes}</ul>
+
+                <h2 class="coaching-detail-subtitle">Durate e prezzi</h2>
+                <div class="coaching-tiers">${tiers}</div>
+
+                <p class="pdp-meta-note">Il pagamento avviene prima dell'inizio del percorso. Dopo il pagamento ti ricontattiamo entro 24 ore per fissare la video call iniziale.</p>
+            </div>
+        </article>
+    `;
+}
+
 function normalizeCheckoutBaseUrl(value) {
     const text = String(value || '').trim();
     if (!text) return '';
@@ -720,9 +794,23 @@ function getCheckoutUrls(orderType) {
 
 function getCoachingPlanById(planId) {
     if (!Array.isArray(SHOP_CONFIG.coachingPlans)) return null;
-    const normalizedPlanId = String(planId || '').trim().toLowerCase();
+    let normalizedPlanId = String(planId || '').trim().toLowerCase();
     if (!normalizedPlanId) return null;
+    const aliases = SHOP_CONFIG.coachingPlanAliases || {};
+    if (aliases[normalizedPlanId]) {
+        normalizedPlanId = String(aliases[normalizedPlanId]).toLowerCase();
+    }
     return SHOP_CONFIG.coachingPlans.find((plan) => String(plan.id || '').toLowerCase() === normalizedPlanId) || null;
+}
+
+function getCoachingTrack(identifier) {
+    const tracks = Array.isArray(SHOP_CONFIG.coachingTracks) ? SHOP_CONFIG.coachingTracks : [];
+    const id = String(identifier || '').trim().toLowerCase();
+    if (!id) return null;
+    return tracks.find((track) => (
+        String(track.key || '').toLowerCase() === id ||
+        String(track.slug || '').toLowerCase() === id
+    )) || null;
 }
 
 function getCoachingPlanFromParams(params) {
@@ -1014,6 +1102,14 @@ function buildCheckoutProgramsSummary(items, totals) {
 }
 
 function buildCheckoutCoachingSummary(plan) {
+    const track = getCoachingTrack(plan.trackKey);
+    const includesList = track && Array.isArray(track.includes)
+        ? `<p class="checkout-coaching-includes-title">Il percorso include</p>
+           <ul class="checkout-coaching-includes">${track.includes.map((item) => `<li>${item}</li>`).join('')}</ul>`
+        : '';
+    const detailLink = track
+        ? `<a class="checkout-coaching-back" href="coaching-pacchetto.html?track=${encodeURIComponent(track.slug)}">Rivedi condizioni e durate</a>`
+        : '';
     return `
         <h2>Riepilogo ordine</h2>
         <div class="checkout-summary-list">
@@ -1025,6 +1121,8 @@ function buildCheckoutCoachingSummary(plan) {
         <div class="checkout-summary-totals">
             <div class="checkout-summary-item checkout-summary-total"><span>Totale</span><strong>${formatEuro(plan.priceCents)}</strong></div>
         </div>
+        ${includesList}
+        ${detailLink}
     `;
 }
 
@@ -1243,6 +1341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initListingFilterControls();
     renderListingPage();
     renderProgramPage();
+    renderCoachingDetailPage();
     renderCartPage();
     renderCheckoutPage();
     initShopActions();

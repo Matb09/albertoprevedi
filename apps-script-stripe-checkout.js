@@ -24,6 +24,26 @@ const PACKS = [
   { quantity: 5, priceCents: 22900 }
 ];
 
+// Listino coaching lato SERVER: il prezzo addebitato viene preso da qui,
+// NON da quello inviato dal browser (anti-manomissione).
+// Tenere allineato con js/shop-data.js -> COACHING_TRACKS.
+const COACHING_PLANS = {
+  'performance-3m':  { months: 3,  priceCents: 75000,  trackKey: 'performance', trackLabel: 'Bodybuilding Performance',  label: 'Bodybuilding Performance - 3 mesi' },
+  'performance-6m':  { months: 6,  priceCents: 120000, trackKey: 'performance', trackLabel: 'Bodybuilding Performance',  label: 'Bodybuilding Performance - 6 mesi' },
+  'performance-12m': { months: 12, priceCents: 220000, trackKey: 'performance', trackLabel: 'Bodybuilding Performance',  label: 'Bodybuilding Performance - 12 mesi' },
+  'physique-3m':     { months: 3,  priceCents: 60000,  trackKey: 'physique',    trackLabel: 'Athlete Physique Coaching', label: 'Athlete Physique Coaching - Foundation/Start - 3 mesi' },
+  'physique-6m':     { months: 6,  priceCents: 90000,  trackKey: 'physique',    trackLabel: 'Athlete Physique Coaching', label: 'Athlete Physique Coaching - Build/Progress - 6 mesi' },
+  'physique-12m':    { months: 12, priceCents: 175000, trackKey: 'physique',    trackLabel: 'Athlete Physique Coaching', label: 'Athlete Physique Coaching - Season/Evolution - 12 mesi' }
+};
+
+// Compatibilita: vecchi ID -> nuovi ID (cosi eventuali vecchi link non si rompono).
+const COACHING_ID_ALIASES = {
+  'bb-agonistico-6m': 'performance-6m',
+  'bb-agonistico-12m': 'performance-12m',
+  'bb-fitness-6m': 'physique-6m',
+  'bb-fitness-12m': 'physique-12m'
+};
+
 function doPost(e) {
   try {
     const payload = JSON.parse((e.postData && e.postData.contents) || '{}');
@@ -159,21 +179,25 @@ function buildProgramOrderData(rawItems) {
 }
 
 function buildCoachingOrderData(rawCoaching) {
-  const coaching = normalizeCoaching(rawCoaching);
-  if (!coaching) {
-    return { error: 'Invalid coaching payload' };
+  const requestedId = String((rawCoaching && rawCoaching.id) || '').trim().toLowerCase();
+  const resolvedId = COACHING_ID_ALIASES[requestedId] || requestedId;
+  const plan = COACHING_PLANS[resolvedId];
+
+  if (!plan) {
+    return { error: 'Invalid coaching plan' };
   }
 
+  // Prezzo e dati presi dal listino server: il priceCents inviato dal browser viene ignorato.
   return {
-    totalCents: coaching.priceCents,
-    orderLabel: coaching.label,
-    productName: coaching.label,
-    productDescription: `${coaching.trackLabel || 'Percorso coaching online'} - ${coaching.months} mesi`,
+    totalCents: plan.priceCents,
+    orderLabel: plan.label,
+    productName: plan.label,
+    productDescription: `${plan.trackLabel} - ${plan.months} mesi`,
     metadata: {
-      coaching_id: coaching.id,
-      coaching_track: coaching.trackKey || '',
-      coaching_track_label: coaching.trackLabel || '',
-      coaching_months: String(coaching.months)
+      coaching_id: resolvedId,
+      coaching_track: plan.trackKey,
+      coaching_track_label: plan.trackLabel,
+      coaching_months: String(plan.months)
     }
   };
 }
@@ -190,29 +214,8 @@ function normalizeItems(rawItems) {
     }));
 }
 
-function normalizeCoaching(rawCoaching) {
-  if (!rawCoaching || typeof rawCoaching !== 'object') return null;
-
-  const id = String(rawCoaching.id || '').slice(0, 80);
-  const label = String(rawCoaching.label || '').slice(0, 180);
-  const trackKey = String(rawCoaching.trackKey || '').slice(0, 80);
-  const trackLabel = String(rawCoaching.trackLabel || '').slice(0, 120);
-  const months = parseInt(rawCoaching.months, 10);
-  const priceCents = parseInt(rawCoaching.priceCents, 10);
-
-  if (!id || !label) return null;
-  if (!Number.isFinite(months) || months <= 0) return null;
-  if (!Number.isFinite(priceCents) || priceCents <= 0) return null;
-
-  return {
-    id,
-    label,
-    trackKey,
-    trackLabel,
-    months,
-    priceCents
-  };
-}
+// normalizeCoaching rimossa: i dati coaching ora derivano dal listino server (COACHING_PLANS),
+// quindi il prezzo non dipende piu da cio che invia il browser.
 
 function normalizeCustomer(rawCustomer) {
   const customer = rawCustomer && typeof rawCustomer === 'object' ? rawCustomer : {};

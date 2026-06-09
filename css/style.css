@@ -4405,3 +4405,131 @@ ul {
         justify-content: flex-start;
     }
 }
+
+/* === Coaching - card CTA, pagina dettaglio pacchetto e recap checkout === */
+.coaching-path-cta {
+    width: 100%;
+    justify-content: center;
+}
+
+.coaching-detail-subtitle {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: #0f172a;
+    margin: 1.6rem 0 0.55rem;
+}
+
+.coaching-detail .pdp-features,
+.coaching-detail .coaching-path-bullets {
+    margin-top: 0.5rem;
+}
+
+.coaching-tiers {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin-top: 0.6rem;
+}
+
+.coaching-tier {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    padding: 0.9rem 1.05rem;
+    border: 1px solid var(--primary-200);
+    border-radius: 0.9rem;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.coaching-tier-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+}
+
+.coaching-tier-name {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.coaching-tier-duration {
+    color: #475569;
+    font-size: 0.92rem;
+}
+
+.coaching-tier-pricing {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    line-height: 1.15;
+}
+
+.coaching-tier-price {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-700);
+}
+
+.coaching-tier-monthly {
+    font-size: 0.8rem;
+    color: #64748b;
+}
+
+.coaching-tier-cta {
+    white-space: nowrap;
+}
+
+.checkout-coaching-includes-title {
+    margin-top: 1.1rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #0f172a;
+}
+
+.checkout-coaching-includes {
+    list-style: none;
+    margin: 0.45rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.35rem;
+}
+
+.checkout-coaching-includes li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.86rem;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.checkout-coaching-includes li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: var(--primary-500);
+}
+
+.checkout-coaching-back {
+    display: inline-flex;
+    margin-top: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--primary-700);
+}
+
+@media (max-width: 640px) {
+    .coaching-tier {
+        grid-template-columns: 1fr auto;
+    }
+
+    .coaching-tier-cta {
+        grid-column: 1 / -1;
+        justify-content: center;
+    }
+}
