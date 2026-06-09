@@ -41,7 +41,7 @@ function doPost(e) {
         const htmlBody = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #0ea5e9, #0891b2); padding: 24px; border-radius: 12px 12px 0 0;">
-          <h2 style="color: white; margin: 0;">📩 Nuovo contatto dal sito</h2>
+          <h2 style="color: white; margin: 0;">Nuovo contatto dal sito</h2>
         </div>
         <div style="background: #f8fafc; padding: 24px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 12px 12px;">
           <table style="width: 100%; border-collapse: collapse;">
@@ -104,7 +104,10 @@ function testEmail() {
                 name: 'Test Utente',
                 email: 'test@example.com',
                 subject: 'Test dal sito',
-                message: 'Questo è un messaggio di test.'
+                message: 'Questo è un messaggio di test.',
+                privacyConsent: true,
+                privacyConsentAt: '2026-01-01T00:00:00.000Z',
+                privacyPolicyVersion: '2026-04-16'
             })
         }
     };
