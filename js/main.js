@@ -11,7 +11,62 @@ document.addEventListener('DOMContentLoaded', () => {
     initContactForm();
     initProgramFilters();
     initServicePurchaseToggles();
+    initInteractionTracking();
 });
+
+/* ═══════════════════════════════════════════════════
+   GA4 / GTM — Eventi di interazione (dataLayer)
+   Wrapper standard previsto dal documento di tracciamento:
+   { event: 'GA4_event', eventname: <nome>, label: <valore> }
+   ═══════════════════════════════════════════════════ */
+function pushGa4Event(eventName, label) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+        event: 'GA4_event',
+        eventname: eventName,
+        label: label
+    });
+}
+
+/* Riconosce il social a partire dall'href del link cliccato. */
+function detectSocialFromHref(href) {
+    if (!href) return null;
+    const url = href.toLowerCase();
+    if (url.includes('instagram.com')) return 'Instagram';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+    if (url.includes('tiktok.com')) return 'TikTok';
+    if (url.includes('facebook.com') || url.includes('fb.com')) return 'Facebook';
+    return null;
+}
+
+/* True se l'href è un contatto diretto: mail o WhatsApp. */
+function isContactHref(href) {
+    if (!href) return false;
+    const url = href.toLowerCase();
+    return url.startsWith('mailto:') || url.includes('wa.me') || url.includes('whatsapp.com');
+}
+
+function initInteractionTracking() {
+    /* Listener delegato su document: intercetta anche footer e link
+       iniettati dinamicamente da site-shell.js dopo il DOMContentLoaded. */
+    document.addEventListener('click', (e) => {
+        const link = e.target.closest('a[href]');
+        if (!link) return;
+        const href = link.getAttribute('href');
+
+        // Evento "social": click su Instagram / YouTube / TikTok / Facebook
+        const social = detectSocialFromHref(href);
+        if (social) {
+            pushGa4Event('social', social);
+            return;
+        }
+
+        // Evento "contact_me": click su mail o WhatsApp -> label "no_subject"
+        if (isContactHref(href)) {
+            pushGa4Event('contact_me', 'no_subject');
+        }
+    });
+}
 
 function initMobileCartFab() {
     if (document.querySelector('[data-mobile-cart-fab]')) return;
@@ -425,6 +480,11 @@ function initContactForm() {
             showFeedback('Devi accettare l\'informativa privacy per inviare il messaggio.');
             return;
         }
+
+        // Evento "contact_me": info corrette + privacy flaggata.
+        // label = oggetto selezionato nel form.
+        const subjectField = form.querySelector('[name="subject"]');
+        pushGa4Event('contact_me', subjectField ? subjectField.value : '');
 
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnHTML = submitBtn.innerHTML;

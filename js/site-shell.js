@@ -109,7 +109,7 @@ function mountSiteFooter() {
                             <div class="footer-brand">Alberto<span>Prevedi</span></div>
                             <p class="footer-brand-copy">Bodybuilding, Nutrizione e prep. Gare</p>
                             <div class="social-links">
-                                <a href="https://www.instagram.com/albe_prepcoach/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram" title="Instagram">
+                                <a href="https://www.instagram.com/albertoprevedi.coach/" target="_blank" rel="noopener" class="social-link" aria-label="Instagram" title="Instagram">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
                                         <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
