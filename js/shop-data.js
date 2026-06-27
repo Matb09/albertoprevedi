@@ -104,7 +104,7 @@ const SHOP_CONFIG = {
     // Opzionale ma consigliato: URL base pubblico del sito (deve essere HTTPS).
     // Se lasciato vuoto, il checkout usa automaticamente l'origin della pagina corrente.
     // Esempio: 'https://www.albertoprevedi.it/'
-    siteBaseUrl: 'https://albertoprevedi.vercel.app/',
+    siteBaseUrl: 'https://albertoprevedi.it/',
     // Deploy URL dello script che crea la sessione Stripe Checkout.
     // Sostituisci questo valore quando pubblichi l'endpoint.
     checkoutApiUrl: 'https://script.google.com/macros/s/AKfycbxNB1mwyw5BhWvLQS8IG4cqfAljNTPnR7NqbQ-zpcIe3Yn4gKpgR9vNTLMZ7gcogDaT/exec'

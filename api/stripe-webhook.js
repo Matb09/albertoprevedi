@@ -7,7 +7,9 @@
 // redirect e risponde 200 a Stripe solo se lo script ha risposto bene.
 //
 // In Stripe (test E live) l'endpoint webhook deve puntare a:
-//   https://albertoprevedi.vercel.app/api/stripe-webhook
+//   https://albertoprevedi.it/api/stripe-webhook
+// (anche https://albertoprevedi.vercel.app/api/stripe-webhook resta valido:
+//  la function gira su Vercel ed e' raggiungibile da entrambi i domini.)
 // L'URL di inoltro puo essere sovrascritto senza deploy con la variabile
 // d'ambiente STRIPE_WEBHOOK_FORWARD_URL su Vercel.
 
