@@ -1,14 +1,24 @@
 {
   "redirects": [
+    { "source": "/chisono/", "destination": "/chi-sono.html", "permanent": true },
     { "source": "/chisono", "destination": "/chi-sono.html", "permanent": true },
+    { "source": "/il-team/", "destination": "/chi-sono.html", "permanent": true },
     { "source": "/il-team", "destination": "/chi-sono.html", "permanent": true },
+    { "source": "/freedomcenter/", "destination": "/chi-sono.html", "permanent": true },
     { "source": "/freedomcenter", "destination": "/chi-sono.html", "permanent": true },
+    { "source": "/allenamento/", "destination": "/coaching.html", "permanent": true },
     { "source": "/allenamento", "destination": "/coaching.html", "permanent": true },
+    { "source": "/integratori/", "destination": "/coaching.html", "permanent": true },
     { "source": "/integratori", "destination": "/coaching.html", "permanent": true },
+    { "source": "/gruppi-carenti-e-asimmetrie/", "destination": "/coaching.html", "permanent": true },
     { "source": "/gruppi-carenti-e-asimmetrie", "destination": "/coaching.html", "permanent": true },
+    { "source": "/power-bodybuilding-week-1-1-microciclo/", "destination": "/coaching.html", "permanent": true },
     { "source": "/power-bodybuilding-week-1-1-microciclo", "destination": "/coaching.html", "permanent": true },
+    { "source": "/carboidrati-intra-wo-il-timing-e-tutto/", "destination": "/coaching.html", "permanent": true },
     { "source": "/carboidrati-intra-wo-il-timing-e-tutto", "destination": "/coaching.html", "permanent": true },
+    { "source": "/acne-la-cura-dietetica/", "destination": "/coaching.html", "permanent": true },
     { "source": "/acne-la-cura-dietetica", "destination": "/coaching.html", "permanent": true },
+    { "source": "/road-with-gran-torino/", "destination": "/", "permanent": true },
     { "source": "/road-with-gran-torino", "destination": "/", "permanent": true }
   ],
   "headers": [
