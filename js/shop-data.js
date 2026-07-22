@@ -101,6 +101,11 @@ const SHOP_CONFIG = {
     coachingTracks: COACHING_TRACKS,
     coachingPlans: COACHING_PLANS,
     coachingPlanAliases: COACHING_PLAN_ALIASES,
+    // Mostra durate, prezzi e pulsanti "Procedi al pagamento" nel dettaglio coaching.
+    // false = nascosti dall'interfaccia: al loro posto una singola CTA verso la
+    // segreteria WhatsApp. I dati (tiers) e il checkout coaching restano intatti e
+    // pronti: per riattivare durate/prezzi/pagamento basta rimettere true.
+    coachingShowPricing: false,
     // Opzionale ma consigliato: URL base pubblico del sito (deve essere HTTPS).
     // Se lasciato vuoto, il checkout usa automaticamente l'origin della pagina corrente.
     // Esempio: 'https://www.albertoprevedi.it/'

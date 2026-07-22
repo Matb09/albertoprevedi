@@ -710,6 +710,19 @@ function renderCoachingDetailPage() {
         `;
     }).join('');
 
+    // Durate + prezzi + funnel di pagamento: mostrati solo se SHOP_CONFIG.coachingShowPricing e true.
+    // Altrimenti una singola CTA verso la segreteria WhatsApp (i tiers sopra e il checkout restano pronti).
+    const pricingBlock = SHOP_CONFIG.coachingShowPricing === true
+        ? `
+                <h2 class="coaching-detail-subtitle">Durate e prezzi</h2>
+                <div class="coaching-tiers">${tiers}</div>
+
+                <p class="pdp-meta-note">Il pagamento avviene prima dell'inizio del percorso. Dopo il pagamento ti ricontattiamo entro 24 ore per fissare la video call iniziale.</p>`
+        : `
+                <div class="coaching-detail-actions" style="margin-top:1.6rem;">
+                    <a class="btn btn-primary coaching-detail-cta" style="width:100%;justify-content:center;text-align:center;white-space:normal;line-height:1.3;" href="https://wa.me/393887587034" target="_blank" rel="noopener">Per maggiori informazioni su durata e prezzi, contatta la segreteria</a>
+                </div>`;
+
     const cover = track.cover
         ? `<div class="pdp-media coaching-detail-media"><img src="${track.cover}" alt="${track.coverAlt || track.name}" loading="eager" decoding="async"></div>`
         : '';
@@ -728,10 +741,7 @@ function renderCoachingDetailPage() {
                 <h2 class="coaching-detail-subtitle">Cosa include</h2>
                 <ul class="pdp-features">${includes}</ul>
 
-                <h2 class="coaching-detail-subtitle">Durate e prezzi</h2>
-                <div class="coaching-tiers">${tiers}</div>
-
-                <p class="pdp-meta-note">Il pagamento avviene prima dell'inizio del percorso. Dopo il pagamento ti ricontattiamo entro 24 ore per fissare la video call iniziale.</p>
+                ${pricingBlock}
             </div>
         </article>
     `;
